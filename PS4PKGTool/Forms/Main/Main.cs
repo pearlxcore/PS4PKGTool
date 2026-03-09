@@ -3865,7 +3865,7 @@ namespace PS4PKGTool
                         string selectedPKGFilename = PKG.SelectedPKGFilename;
                         Logger.LogInformation($"Extracting PKG ({selectedPKGFilename})..");
                         toolStripStatusLabel2.Text = $"Extracting PKG ({selectedPKGFilename})..";
-                        extractLocation = $@"{extractLocation}\{PS4_PKG.PS4_Title}";
+                        extractLocation = $@"{extractLocation}\{PS4_PKG.Content_ID}";
                         Tool.CreateDirectoryIfNotExists(extractLocation);
                         string arguments = $"img_extract --passcode {tbPasscode.Text} \"{selectedPKGFilename}\" \"{extractLocation}\"";
                         Process extract = new Process
@@ -5344,3 +5344,4 @@ namespace PS4PKGTool
         }
     }
 }
+
