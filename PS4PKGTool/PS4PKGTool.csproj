@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -18,6 +18,10 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Replaces the SDK's default manifest so the process is per-monitor
+         v2 DPI-aware from the very first window (fixes blurry text on
+         scaled displays). See app.manifest for the full rationale. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>PackageIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
