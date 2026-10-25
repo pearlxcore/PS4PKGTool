@@ -1,4 +1,4 @@
-namespace PS4PKGTool
+﻿namespace PS4PKGTool
 {
     partial class ProgramSetting
     {
@@ -368,7 +368,8 @@ namespace PS4PKGTool
             // 
             darkLabel7.Location = new System.Drawing.Point(106, 73);
             darkLabel7.Name = "darkLabel7";
-            darkLabel7.Size = new System.Drawing.Size(60, 15);
+            // Widened: "Text Color" clipped at high DPI (snug design width).
+            darkLabel7.Size = new System.Drawing.Size(75, 15);
             darkLabel7.TabIndex = 14;
             darkLabel7.Text = "Text Color";
             // 
@@ -1399,8 +1400,8 @@ namespace PS4PKGTool
             // 
             // ProgramSetting
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(767, 736);
             Controls.Add(darkSidebarTabControl1);
             Controls.Add(darkFooterBar1);

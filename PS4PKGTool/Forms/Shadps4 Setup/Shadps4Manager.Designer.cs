@@ -1,4 +1,4 @@
-namespace PS4PKGTool
+﻿namespace PS4PKGTool
 {
     partial class Shadps4Manager
     {
@@ -1085,7 +1085,7 @@ namespace PS4PKGTool
             btnMaintenance.Name = "btnMaintenance";
             btnMaintenance.Size = new System.Drawing.Size(108, 26);
             btnMaintenance.TabIndex = 6;
-            btnMaintenance.Text = "Maintenance ▾";
+            btnMaintenance.Text = "Maintenance â–¾";
             btnMaintenance.Click += btnMaintenance_Click;
             // 
             // lblStatus
@@ -1767,8 +1767,8 @@ namespace PS4PKGTool
             // 
             // Shadps4Manager
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(887, 884);
             Controls.Add(shadps4Tabs);
             Controls.Add(darkHeaderBar1);

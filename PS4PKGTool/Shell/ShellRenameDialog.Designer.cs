@@ -1,4 +1,4 @@
-namespace PS4PKGTool.Shell
+﻿namespace PS4PKGTool.Shell
 {
     partial class ShellRenameDialog
     {
@@ -54,6 +54,7 @@ namespace PS4PKGTool.Shell
             //
             // ShellRenameDialog
             //
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(380, 112);
             Controls.Add(btnShellCancel);

@@ -2545,7 +2545,7 @@ namespace PS4PKGTool
             lblType.Location = new System.Drawing.Point(609, 5);
             lblType.Margin = new Padding(0, 5, 4, 0);
             lblType.Name = "lblType";
-            lblType.Size = new System.Drawing.Size(32, 15);
+            lblType.Size = new System.Drawing.Size(34, 15);
             lblType.TabIndex = 6;
             lblType.Text = "Type";
             // 
@@ -2608,7 +2608,7 @@ namespace PS4PKGTool
             btnFilterClear.Location = new System.Drawing.Point(470, 28);
             btnFilterClear.Margin = new Padding(0, 0, 0, 4);
             btnFilterClear.Name = "btnFilterClear";
-            btnFilterClear.Size = new System.Drawing.Size(64, 24);
+            btnFilterClear.Size = new System.Drawing.Size(80, 24);
             btnFilterClear.TabIndex = 87;
             btnFilterClear.Text = "Clear";
             btnFilterClear.Click += btnFilterClear_Click;
@@ -4013,8 +4013,8 @@ namespace PS4PKGTool
             // Main
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(1219, 817);
             Controls.Add(darkMenuStrip1);
             Controls.Add(mainTabControl);

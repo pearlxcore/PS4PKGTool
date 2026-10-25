@@ -580,6 +580,26 @@ namespace PS4PKGTool
         private async void Form1_Load(object sender, EventArgs e)
         {
             Logger.LogInformation("App started.");
+            // The form-level DPI scale pass resizes AutoSize children (e.g.
+            // the filter checkboxes) without a follow-up layout, leaving them
+            // doubled at high DPI — force the flow panel to re-measure once
+            // the scaling has fully settled.
+            flpFilter.PerformLayout();
+            BeginInvoke(() =>
+            {
+                flpFilter.PerformLayout();
+
+                // Hidden tab pages can keep stale anchoring after the DPI
+                // scale + maximize ordering — the Grouped list ends up stuck
+                // at its design width. Setting its correct bounds once heals
+                // the anchor info; it tracks resizes from there. It fills
+                // the page below the Group-by row (design Y=30).
+                int glvTop = (int)Math.Round(30f * groupedListView.DeviceDpi / 96f);
+                groupedListView.Bounds = new Rectangle(
+                    0, glvTop,
+                    tabPageGroup.ClientSize.Width,
+                    Math.Max(0, tabPageGroup.ClientSize.Height - glvTop));
+            });
             try
             {
                 SetupFilterChecklists();

@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -134,7 +134,7 @@ namespace PS4PKGTool
             // OfficialUpdateForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new Size(917, 491);
             Controls.Add(toolStripProgress);
             Controls.Add(lblStatus);

@@ -1,4 +1,4 @@
-namespace PS4PKGTool.Shell
+﻿namespace PS4PKGTool.Shell
 {
     partial class ShellOperationForm
     {
@@ -129,6 +129,7 @@ namespace PS4PKGTool.Shell
             //
             // ShellOperationForm
             //
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(420, 256);
             Controls.Add(btnShellClose);

@@ -1,4 +1,4 @@
-namespace PS4PKGTool.Shell
+﻿namespace PS4PKGTool.Shell
 {
     partial class ShellConfirmForm
     {
@@ -26,6 +26,7 @@ namespace PS4PKGTool.Shell
             //
             // ShellConfirmForm
             //
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(360, 64);
             Controls.Add(lblShellConfirm);

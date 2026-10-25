@@ -11,9 +11,12 @@ namespace PS4PKGTool.Utilities.PS4PKGToolHelper
     {
         public DialogResult Result { get; private set; } = DialogResult.None;
 
+        private readonly AppMessageButtons _buttons;
+
         public AppMessageBox(string title, string message, AppMessageType type, AppMessageButtons buttons)
         {
             InitializeComponent();
+            _buttons = buttons;
 
             this.Text = title;
             darkLabelTitle.Text = title;
@@ -89,6 +92,59 @@ namespace PS4PKGTool.Utilities.PS4PKGToolHelper
             var text = $"{darkLabelTitle.Text}\r\n{darkLabelMessage.Text}";
             Clipboard.SetText(text);
             btnCopy.Text = "Copied!";
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            // Fit the dialog to its content. Everything is in final device
+            // units here — the form's DPI scaling has already run, so this
+            // works identically at any scale factor (the original ctor-time
+            // sizing computed 96-DPI metrics and ended up half-sized/clipped
+            // on scaled displays).
+            int dpi;
+            using (var probe = new Control()) { var _ = probe.Handle; dpi = probe.DeviceDpi; }
+            double dpiRatio = dpi / 96.0;
+            int S(int v) => (int)Math.Round(v * dpiRatio);
+
+            int labelWidth = S(420);
+            darkLabelMessage.MaximumSize = new Size(labelWidth, 0);
+
+            int messageHeight;
+            using (Graphics g = darkLabelMessage.CreateGraphics())
+            {
+                SizeF size = g.MeasureString(darkLabelMessage.Text, darkLabelMessage.Font, labelWidth);
+                messageHeight = (int)Math.Ceiling(size.Height) + S(6);
+            }
+
+            int messageTop = darkLabelTitle.Bottom + S(10);
+            darkLabelMessage.Bounds = new Rectangle(S(20), messageTop, labelWidth, messageHeight);
+
+            int buttonsTop = darkLabelMessage.Bottom + S(14);
+            int neededHeight = buttonsTop + btnCopy.Height + S(14);
+            // The form's own width is not reliably scaled by the DPI pass
+            // (unlike its children) — set it explicitly before positioning
+            // the buttons so centering math uses the final width.
+            ClientSize = new Size(S(460), neededHeight);
+
+            btnCopy.Location = new Point(S(20), buttonsTop);
+
+            switch (_buttons)
+            {
+                case AppMessageButtons.YesNo:
+                    btnYes.Location = new Point(ClientSize.Width - S(220), buttonsTop);
+                    btnNo.Location = new Point(ClientSize.Width - S(110), buttonsTop);
+                    break;
+                case AppMessageButtons.YesNoCancel:
+                    btnYes.Location = new Point(ClientSize.Width - S(330), buttonsTop);
+                    btnNo.Location = new Point(ClientSize.Width - S(220), buttonsTop);
+                    btnCancel.Location = new Point(ClientSize.Width - S(110), buttonsTop);
+                    break;
+                default: // OK
+                    btnOK.Location = new Point((ClientSize.Width - S(100)) / 2, buttonsTop);
+                    break;
+            }
         }
 
         public static DialogResult Show(string title, string message, AppMessageType type, AppMessageButtons buttons)
