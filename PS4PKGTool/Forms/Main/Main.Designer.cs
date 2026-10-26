@@ -3436,6 +3436,7 @@ namespace PS4PKGTool
             _tasksGrid.MultiSelect = false;
             _tasksGrid.Name = "_tasksGrid";
             _tasksGrid.ReadOnly = true;
+            _tasksGrid.RowTemplate.Height = 23;
             _tasksGrid.Size = new System.Drawing.Size(1162, 404);
             _tasksGrid.TabIndex = 0;
             _tasksGrid.SelectionChanged += tasksGrid_SelectionChanged;
