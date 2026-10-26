@@ -2737,10 +2737,13 @@ namespace PS4PKGTool
             cbGroupBy.DropDownWidth = 185;
             cbGroupBy.Font = new System.Drawing.Font("Segoe UI", 9F);
             cbGroupBy.Items.AddRange(new object[] { "Title", "Title ID", "Required Firmware", "PKG Type", "Category", "ShadPS4" });
-            cbGroupBy.Location = new System.Drawing.Point(62, 3);
+            // Shifted right (62→75) and narrowed (185→172) so the "Group by:"
+            // label fits without clipping at high DPI; the count label at 252
+            // keeps its gap.
+            cbGroupBy.Location = new System.Drawing.Point(75, 3);
             cbGroupBy.Name = "cbGroupBy";
             cbGroupBy.SelectedIndex = 1;
-            cbGroupBy.Size = new System.Drawing.Size(185, 24);
+            cbGroupBy.Size = new System.Drawing.Size(172, 24);
             cbGroupBy.TabIndex = 105;
             cbGroupBy.SelectedIndexChanged += CbGroupBy_SelectedIndexChanged;
             // 
@@ -2749,7 +2752,8 @@ namespace PS4PKGTool
             darkLabelGroupBy.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabelGroupBy.Location = new System.Drawing.Point(4, 8);
             darkLabelGroupBy.Name = "darkLabelGroupBy";
-            darkLabelGroupBy.Size = new System.Drawing.Size(55, 15);
+            // 68 (was 55): "Group by:" clipped to "Group" at high DPI.
+            darkLabelGroupBy.Size = new System.Drawing.Size(68, 15);
             darkLabelGroupBy.TabIndex = 106;
             darkLabelGroupBy.Text = "Group by:";
             // 
