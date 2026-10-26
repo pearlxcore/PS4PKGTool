@@ -1,4 +1,4 @@
-﻿namespace PS4PKGTool
+namespace PS4PKGTool
 {
     partial class Shadps4Manager
     {
@@ -1282,7 +1282,7 @@
             tabManagerPatches.Padding = new System.Windows.Forms.Padding(12);
             tabManagerPatches.Size = new System.Drawing.Size(765, 816);
             tabManagerPatches.TabIndex = 4;
-            tabManagerPatches.Text = "Patches & Cheats";
+            tabManagerPatches.Text = "Patches && Cheats";
             tabManagerPatches.Visible = false;
             // 
             // grpPatchesDefinitions

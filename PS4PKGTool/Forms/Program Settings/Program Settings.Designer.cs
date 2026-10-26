@@ -1178,7 +1178,7 @@ namespace PS4PKGTool
             btnSaveClose.Name = "btnSaveClose";
             btnSaveClose.Size = new System.Drawing.Size(146, 25);
             btnSaveClose.TabIndex = 1;
-            btnSaveClose.Text = "Save & Close";
+            btnSaveClose.Text = "Save && Close";
             btnSaveClose.Click += btnSaveClose_Click;
             // 
             // darkSidebarTabControl1
