@@ -2525,7 +2525,10 @@ namespace PS4PKGTool
             lblFilterSysVer.Location = new System.Drawing.Point(431, 5);
             lblFilterSysVer.Margin = new Padding(0, 5, 4, 0);
             lblFilterSysVer.Name = "lblFilterSysVer";
-            lblFilterSysVer.Size = new System.Drawing.Size(107, 15);
+            // 107 design units clipped "Required Firmware ≥" into two lines at
+            // high DPI (measured need: 118 at 200%); a wrapped label cannot
+            // center on its textbox. 120 keeps it on one line.
+            lblFilterSysVer.Size = new System.Drawing.Size(120, 15);
             lblFilterSysVer.TabIndex = 4;
             lblFilterSysVer.Text = "Required Firmware ≥";
             // 

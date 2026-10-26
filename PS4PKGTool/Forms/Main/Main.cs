@@ -182,6 +182,11 @@ namespace PS4PKGTool
             _pkgListTabTopGap = Math.Max(0, subTabControl.Top - grpFilter.Bottom);
             _pkgListTabBottomGap = Math.Max(0, tabPage1.ClientSize.Height - subTabControl.Bottom);
             _pkgListLayoutInitialized = true;
+            // Crossing monitors with a different DPI re-runs DarkLabel's font
+            // height pass, which re-queues its grow after this form-level
+            // event — align only once that queued work has drained, hence the
+            // nested invoke.
+            DpiChanged += (s, e) => BeginInvoke(() => BeginInvoke(AlignFilterRowLabels));
 
             // Tag-bind image/icon extraction menu items for data-driven dispatch
             globalExtractImagesAndIconToolStripMenuItem1.Tag = $"{ImageIconExtractionType.ALL}|{PKGSelectionType.ALL}";
@@ -588,6 +593,9 @@ namespace PS4PKGTool
             BeginInvoke(() =>
             {
                 flpFilter.PerformLayout();
+                // Labels are centered on their combos after the DPI scale
+                // pass has fully settled (see AlignFilterRowLabels).
+                AlignFilterRowLabels();
 
                 // Hidden tab pages can keep stale anchoring after the DPI
                 // scale + maximize ordering — the Grouped list ends up stuck
@@ -4096,6 +4104,7 @@ namespace PS4PKGTool
             flpFilter.Width = grpFilter.ClientSize.Width - 16;
             flpFilter.Height = flpFilter.GetPreferredSize(new Size(flpFilter.Width, 0)).Height;
             RepositionFilterRows();
+            AlignFilterRowLabels();
         }
 
         private void RepositionFilterRows()
@@ -4113,6 +4122,41 @@ namespace PS4PKGTool
             // the form is maximized.
             subTabControl.Height = Math.Max(0,
                 tabPage1.ClientSize.Height - subTabControl.Top - _pkgListTabBottomGap);
+        }
+
+        /// <summary>
+        /// Centers each filter label on the control it annotates. DarkLabel
+        /// grows its height to fit the scaled font (DarkUI ApplyDpiHeight),
+        /// so the designer height no longer matches: the flow panel places
+        /// each child at its own Margin.Top, and the label's top margin (5
+        /// design units) then leaves the vertically-centered text visibly
+        /// low beside its combo (measured ~6 px at 200%, ~9 px at 175%).
+        /// Encode the centering in the margin itself — the value the flow
+        /// panel re-applies on every relayout — so alignment survives
+        /// resizes; recompute here because it depends on the current,
+        /// font-grown heights. The AutoSize checkbox in the same row hugs
+        /// its font and needs no help.
+        /// </summary>
+        private void AlignFilterRowLabels()
+        {
+            if (!_pkgListLayoutInitialized)
+                return;
+            AlignLabelToControl(lblCategory, ccbCategory);
+            AlignLabelToControl(lblRegion, ccbRegion);
+            AlignLabelToControl(lblFilterSysVer, tbFilterSysVer);
+            AlignLabelToControl(lblType, ccbType);
+            AlignLabelToControl(lblShadps4, ccbShadps4);
+        }
+
+        private static void AlignLabelToControl(Control label, Control neighbor)
+        {
+            // Flow rows position every child at its own Margin.Top; center the
+            // label on the neighbor within that scheme. Margins are scaled by
+            // WinForms on DPI changes, and this pass re-runs after those, so a
+            // device-pixel value here stays correct.
+            int top = neighbor.Top + (neighbor.Height - label.Height) / 2;
+            if (label.Margin.Top != top)
+                label.Margin = new Padding(label.Margin.Left, top, label.Margin.Right, label.Margin.Bottom);
         }
 
         /// <summary>Shows the current window width (helper for layout tuning).</summary>
