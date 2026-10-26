@@ -186,7 +186,11 @@ namespace PS4PKGTool
             // height pass, which re-queues its grow after this form-level
             // event — align only once that queued work has drained, hence the
             // nested invoke.
-            DpiChanged += (s, e) => BeginInvoke(() => BeginInvoke(AlignFilterRowLabels));
+            DpiChanged += (s, e) => BeginInvoke(() => BeginInvoke(AlignPkagedListRows));
+            // The grouping combo's runtime height lands from its own scaled
+            // item metrics some time after this pass — re-align whenever it
+            // changes size so the row never stays stale.
+            cbGroupBy.SizeChanged += (s, e) => BeginInvoke(AlignGroupedByRow);
 
             // Tag-bind image/icon extraction menu items for data-driven dispatch
             globalExtractImagesAndIconToolStripMenuItem1.Tag = $"{ImageIconExtractionType.ALL}|{PKGSelectionType.ALL}";
@@ -597,7 +601,7 @@ namespace PS4PKGTool
                 flpFilter.PerformLayout();
                 // Labels are centered on their combos after the DPI scale
                 // pass has fully settled (see AlignFilterRowLabels).
-                AlignFilterRowLabels();
+                AlignPkagedListRows();
 
                 // Hidden tab pages can keep stale anchoring after the DPI
                 // scale + maximize ordering — the Grouped list ends up stuck
@@ -4148,6 +4152,38 @@ namespace PS4PKGTool
             AlignLabelToControl(lblFilterSysVer, tbFilterSysVer);
             AlignLabelToControl(lblType, ccbType);
             AlignLabelToControl(lblShadps4, ccbShadps4);
+            AlignGroupedByRow();
+        }
+
+        /// <summary>
+        /// Centers the Grouped view's row labels on the grouping combo. The
+        /// combo's runtime height comes from its own scaled item metrics and
+        /// is taller than the designer's 24 units, while the labels' grown
+        /// heights drift the other way — left alone, "Group by:" sits
+        /// visibly low beside the combo at high DPI. The row is absolutely
+        /// positioned (no flow engine), so a corrected Top persists.
+        /// </summary>
+        private void AlignGroupedByRow()
+        {
+            if (!_pkgListLayoutInitialized)
+                return;
+            AlignRowTop(darkLabelGroupBy, cbGroupBy);
+            AlignRowTop(darkLabelGroupCount, cbGroupBy);
+            AlignRowTop(lblGlvFilterHint, cbGroupBy);
+        }
+
+        private static void AlignRowTop(Control label, Control neighbor)
+        {
+            int top = neighbor.Top + (neighbor.Height - label.Height) / 2;
+            if (label.Top != top)
+                label.Top = top;
+        }
+
+        /// <summary>Re-runs every PKG-list row alignment that depends on
+        /// settled font metrics.</summary>
+        private void AlignPkagedListRows()
+        {
+            AlignFilterRowLabels();
         }
 
         private static void AlignLabelToControl(Control label, Control neighbor)
