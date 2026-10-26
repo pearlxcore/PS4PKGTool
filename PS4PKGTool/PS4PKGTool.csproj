@@ -97,9 +97,10 @@
     <PackageReference Include="Tomlyn" Version="0.19.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="DarkUI">
-      <HintPath>..\..\DarkUI\DarkUI\bin\Release\net10.0-windows\DarkUI.dll</HintPath>
-    </Reference>
+    <!-- ProjectReference (not a raw DLL reference): guarantees every build
+         compiles the sibling DarkUI checkout, so DPI/theme fixes in DarkUI
+         always flow into the app instead of silently loading a stale DLL. -->
+    <ProjectReference Include="..\..\DarkUI\DarkUI\DarkUI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\Settings.settings">
