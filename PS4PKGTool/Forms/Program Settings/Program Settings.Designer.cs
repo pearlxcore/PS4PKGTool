@@ -1,4 +1,4 @@
-﻿namespace PS4PKGTool
+namespace PS4PKGTool
 {
     partial class ProgramSetting
     {
@@ -291,13 +291,15 @@
             grpPkgExtraction.Name = "grpPkgExtraction";
             grpPkgExtraction.Padding = new System.Windows.Forms.Padding(12);
             grpPkgExtraction.SectionHeader = "PKG Extraction";
-            grpPkgExtraction.Size = new System.Drawing.Size(597, 98);
+            // 112 (was 98): the description wraps to two lines at every DPI,
+            // so the input row moves down one line and the panel follows.
+            grpPkgExtraction.Size = new System.Drawing.Size(597, 112);
             grpPkgExtraction.TabIndex = 2;
             // 
             // btnUseDefaultOrbisTempDirectory
             // 
             btnUseDefaultOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
-            btnUseDefaultOrbisTempDirectory.Location = new System.Drawing.Point(509, 59);
+            btnUseDefaultOrbisTempDirectory.Location = new System.Drawing.Point(509, 75);
             btnUseDefaultOrbisTempDirectory.Name = "btnUseDefaultOrbisTempDirectory";
             btnUseDefaultOrbisTempDirectory.Size = new System.Drawing.Size(75, 26);
             btnUseDefaultOrbisTempDirectory.TabIndex = 3;
@@ -307,7 +309,7 @@
             // btnBrowseOrbisTempDirectory
             // 
             btnBrowseOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
-            btnBrowseOrbisTempDirectory.Location = new System.Drawing.Point(426, 59);
+            btnBrowseOrbisTempDirectory.Location = new System.Drawing.Point(426, 75);
             btnBrowseOrbisTempDirectory.Name = "btnBrowseOrbisTempDirectory";
             btnBrowseOrbisTempDirectory.Size = new System.Drawing.Size(75, 26);
             btnBrowseOrbisTempDirectory.TabIndex = 2;
@@ -316,7 +318,7 @@
             // 
             // tbOrbisTempDirectory
             // 
-            tbOrbisTempDirectory.Location = new System.Drawing.Point(13, 61);
+            tbOrbisTempDirectory.Location = new System.Drawing.Point(13, 77);
             tbOrbisTempDirectory.Name = "tbOrbisTempDirectory";
             tbOrbisTempDirectory.Size = new System.Drawing.Size(405, 23);
             tbOrbisTempDirectory.TabIndex = 1;
@@ -326,7 +328,7 @@
             lblOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
             lblOrbisTempDirectory.Location = new System.Drawing.Point(13, 37);
             lblOrbisTempDirectory.Name = "lblOrbisTempDirectory";
-            lblOrbisTempDirectory.Size = new System.Drawing.Size(570, 20);
+            lblOrbisTempDirectory.Size = new System.Drawing.Size(570, 36);
             lblOrbisTempDirectory.TabIndex = 0;
             lblOrbisTempDirectory.Text = "Temporary directory for PKG preview and extraction staging. Leave blank to use the Windows temporary directory.";
             // 
@@ -1209,7 +1211,7 @@
             grpShellIntegration.Controls.Add(btnShellInstall);
             grpShellIntegration.Controls.Add(lblShellIntegrationStatus);
             grpShellIntegration.Controls.Add(lblShellIntegrationTitle);
-            grpShellIntegration.Location = new System.Drawing.Point(12, 306);
+            grpShellIntegration.Location = new System.Drawing.Point(12, 320);
             grpShellIntegration.Margin = new System.Windows.Forms.Padding(6);
             grpShellIntegration.Name = "grpShellIntegration";
             grpShellIntegration.Padding = new System.Windows.Forms.Padding(12);
@@ -1251,7 +1253,9 @@
             lblShellIntegrationTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
             lblShellIntegrationTitle.Location = new System.Drawing.Point(13, 43);
             lblShellIntegrationTitle.Name = "lblShellIntegrationTitle";
-            lblShellIntegrationTitle.Size = new System.Drawing.Size(280, 18);
+            // 350 (was 280): the sentence wraps to two lines at 280 and its
+            // second line ran into the status label below; one line fits here.
+            lblShellIntegrationTitle.Size = new System.Drawing.Size(350, 18);
             lblShellIntegrationTitle.TabIndex = 0;
             lblShellIntegrationTitle.Text = "Adds PS4 PKG Tool actions to the right-click menu for .pkg files.";
             // 
