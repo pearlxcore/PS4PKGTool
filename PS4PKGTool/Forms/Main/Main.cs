@@ -574,11 +574,13 @@ namespace PS4PKGTool
 
         private bool _wasMaximized;
 
-        /// <summary>Restoring from maximized lands on the minimum width (1150).</summary>
+        /// <summary>Restoring from maximized lands on the minimum width.
+        /// MinimumSize is DPI-scaled by WinForms, so this stays proportional
+        /// at every scaling factor (a literal 1150 would not be).</summary>
         private void Main_Resize(object sender, EventArgs e)
         {
             if (_wasMaximized && WindowState == FormWindowState.Normal)
-                Width = 1150;
+                Width = MinimumSize.Width;
             _wasMaximized = WindowState == FormWindowState.Maximized;
         }
 
@@ -4101,7 +4103,7 @@ namespace PS4PKGTool
             if (!_pkgListLayoutInitialized)
                 return;
 
-            flpFilter.Width = grpFilter.ClientSize.Width - 16;
+            flpFilter.Width = grpFilter.ClientSize.Width - ScaleDpi(16);
             flpFilter.Height = flpFilter.GetPreferredSize(new Size(flpFilter.Width, 0)).Height;
             RepositionFilterRows();
             AlignFilterRowLabels();
@@ -4109,10 +4111,10 @@ namespace PS4PKGTool
 
         private void RepositionFilterRows()
         {
-            flowChips.Width = grpFilter.ClientSize.Width - 16 - lblFilterCount.Width - 8;
-            flowChips.Top = flpFilter.Bottom + 8;
-            lblFilterCount.Top = flowChips.Top + 3;
-            grpFilter.Height = flowChips.Bottom + 8;
+            flowChips.Width = grpFilter.ClientSize.Width - ScaleDpi(16) - lblFilterCount.Width - ScaleDpi(8);
+            flowChips.Top = flpFilter.Bottom + ScaleDpi(8);
+            lblFilterCount.Top = flowChips.Top + ScaleDpi(3);
+            grpFilter.Height = flowChips.Bottom + ScaleDpi(8);
             // Keep the PKG-list sub-tab glued below the filter group: it has
             // a fixed designer Top and would leave a gap when the groupbox
             // shrinks to one line on maximize.
@@ -4158,6 +4160,11 @@ namespace PS4PKGTool
             if (label.Margin.Top != top)
                 label.Margin = new Padding(label.Margin.Left, top, label.Margin.Right, label.Margin.Bottom);
         }
+
+        /// <summary>Scales a 96-DPI design-unit length to this form's DPI for
+        /// runtime layout arithmetic — the code equivalent of what WinForms
+        /// does to designer coordinates.</summary>
+        private int ScaleDpi(int value) => (int)Math.Round(value * DeviceDpi / 96f);
 
         /// <summary>Shows the current window width (helper for layout tuning).</summary>
         private void btnShowWindowWidth_Click(object sender, EventArgs e)
