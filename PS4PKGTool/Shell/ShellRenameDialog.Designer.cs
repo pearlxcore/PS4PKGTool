@@ -1,4 +1,4 @@
-﻿namespace PS4PKGTool.Shell
+namespace PS4PKGTool.Shell
 {
     partial class ShellRenameDialog
     {
@@ -23,20 +23,23 @@
             //
             lblShellFormatLabel.Location = new System.Drawing.Point(12, 12);
             lblShellFormatLabel.Name = "lblShellFormatLabel";
-            lblShellFormatLabel.Size = new System.Drawing.Size(356, 16);
+            // 476x38 (was 356x16): the sentence wraps to two lines at every
+            // DPI and DarkLabel grows to fit them — the one-line designer
+            // height let the grown label cover the text box below it.
+            lblShellFormatLabel.Size = new System.Drawing.Size(476, 38);
             lblShellFormatLabel.TabIndex = 0;
             lblShellFormatLabel.Text = "Rename format (placeholders: {TITLE} {TITLE_ID} {CONTENT_ID} {APP_VERSION} {VERSION} {CATEGORY} {REGION} {SYSTEM_VERSION})";
             //
             // txtShellFormat
             //
-            txtShellFormat.Location = new System.Drawing.Point(12, 34);
+            txtShellFormat.Location = new System.Drawing.Point(12, 54);
             txtShellFormat.Name = "txtShellFormat";
-            txtShellFormat.Size = new System.Drawing.Size(356, 24);
+            txtShellFormat.Size = new System.Drawing.Size(476, 24);
             txtShellFormat.TabIndex = 1;
             //
             // btnShellOk
             //
-            btnShellOk.Location = new System.Drawing.Point(180, 70);
+            btnShellOk.Location = new System.Drawing.Point(276, 88);
             btnShellOk.Name = "btnShellOk";
             btnShellOk.Size = new System.Drawing.Size(90, 30);
             btnShellOk.TabIndex = 2;
@@ -45,7 +48,7 @@
             //
             // btnShellCancel
             //
-            btnShellCancel.Location = new System.Drawing.Point(278, 70);
+            btnShellCancel.Location = new System.Drawing.Point(398, 88);
             btnShellCancel.Name = "btnShellCancel";
             btnShellCancel.Size = new System.Drawing.Size(90, 30);
             btnShellCancel.TabIndex = 3;
@@ -56,7 +59,7 @@
             //
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            ClientSize = new System.Drawing.Size(380, 112);
+            ClientSize = new System.Drawing.Size(500, 124);
             Controls.Add(btnShellCancel);
             Controls.Add(btnShellOk);
             Controls.Add(txtShellFormat);
