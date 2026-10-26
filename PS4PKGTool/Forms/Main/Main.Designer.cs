@@ -2485,7 +2485,7 @@ namespace PS4PKGTool
             lblCategory.Location = new System.Drawing.Point(0, 5);
             lblCategory.Margin = new Padding(0, 5, 4, 0);
             lblCategory.Name = "lblCategory";
-            lblCategory.Size = new System.Drawing.Size(55, 15);
+            lblCategory.Size = new System.Drawing.Size(60, 15);
             lblCategory.TabIndex = 0;
             lblCategory.Text = "Category";
             // 
@@ -2505,7 +2505,7 @@ namespace PS4PKGTool
             lblRegion.Location = new System.Drawing.Point(221, 5);
             lblRegion.Margin = new Padding(0, 5, 4, 0);
             lblRegion.Name = "lblRegion";
-            lblRegion.Size = new System.Drawing.Size(44, 15);
+            lblRegion.Size = new System.Drawing.Size(48, 15);
             lblRegion.TabIndex = 2;
             lblRegion.Text = "Region";
             // 
@@ -2548,7 +2548,7 @@ namespace PS4PKGTool
             lblType.Location = new System.Drawing.Point(609, 5);
             lblType.Margin = new Padding(0, 5, 4, 0);
             lblType.Name = "lblType";
-            lblType.Size = new System.Drawing.Size(34, 15);
+            lblType.Size = new System.Drawing.Size(38, 15);
             lblType.TabIndex = 6;
             lblType.Text = "Type";
             // 
@@ -3337,7 +3337,7 @@ namespace PS4PKGTool
             darkLabel5.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabel5.Location = new System.Drawing.Point(3, 15);
             darkLabel5.Name = "darkLabel5";
-            darkLabel5.Size = new System.Drawing.Size(59, 15);
+            darkLabel5.Size = new System.Drawing.Size(65, 15);
             darkLabel5.TabIndex = 96;
             darkLabel5.Text = "Passcode:";
             // 

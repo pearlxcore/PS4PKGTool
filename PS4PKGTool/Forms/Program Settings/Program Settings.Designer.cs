@@ -362,7 +362,7 @@ namespace PS4PKGTool
             // 
             darkLabel13.Location = new System.Drawing.Point(198, 73);
             darkLabel13.Name = "darkLabel13";
-            darkLabel13.Size = new System.Drawing.Size(72, 15);
+            darkLabel13.Size = new System.Drawing.Size(77, 15);
             darkLabel13.TabIndex = 15;
             darkLabel13.Text = "Background";
             // 
@@ -755,7 +755,7 @@ namespace PS4PKGTool
             darkLabelShadps4Os.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabelShadps4Os.Location = new System.Drawing.Point(13, 72);
             darkLabelShadps4Os.Name = "darkLabelShadps4Os";
-            darkLabelShadps4Os.Size = new System.Drawing.Size(132, 15);
+            darkLabelShadps4Os.Size = new System.Drawing.Size(137, 15);
             darkLabelShadps4Os.TabIndex = 4;
             darkLabelShadps4Os.Text = "Compatibility platform:";
             // 
