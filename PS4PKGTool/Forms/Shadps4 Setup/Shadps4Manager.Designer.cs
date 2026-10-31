@@ -1085,7 +1085,7 @@ namespace PS4PKGTool
             btnMaintenance.Name = "btnMaintenance";
             btnMaintenance.Size = new System.Drawing.Size(108, 26);
             btnMaintenance.TabIndex = 6;
-            btnMaintenance.Text = "Maintenance â–¾";
+            btnMaintenance.Text = "Maintenance ▾";
             btnMaintenance.Click += btnMaintenance_Click;
             // 
             // lblStatus
@@ -1282,7 +1282,7 @@ namespace PS4PKGTool
             tabManagerPatches.Padding = new System.Windows.Forms.Padding(12);
             tabManagerPatches.Size = new System.Drawing.Size(765, 816);
             tabManagerPatches.TabIndex = 4;
-            tabManagerPatches.Text = "Patches && Cheats";
+            tabManagerPatches.Text = "Patches & Cheats";
             tabManagerPatches.Visible = false;
             // 
             // grpPatchesDefinitions

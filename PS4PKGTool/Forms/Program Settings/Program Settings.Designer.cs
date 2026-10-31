@@ -291,8 +291,9 @@ namespace PS4PKGTool
             grpPkgExtraction.Name = "grpPkgExtraction";
             grpPkgExtraction.Padding = new System.Windows.Forms.Padding(12);
             grpPkgExtraction.SectionHeader = "PKG Extraction";
-            // 112 (was 98): the description wraps to two lines at every DPI,
-            // so the input row moves down one line and the panel follows.
+            // 112 (was 98): the description wraps to two lines at high DPI
+            // (DarkLabel grows the label to its measured fit), so the input
+            // row moves down one line and the panel follows.
             grpPkgExtraction.Size = new System.Drawing.Size(597, 112);
             grpPkgExtraction.TabIndex = 2;
             // 

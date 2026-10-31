@@ -15,3 +15,4 @@
   - Section headers, the File Viewer title and info strip, filter labels, the `Expand All` button, and the Group By row are no longer clipped, overlapped, or misaligned.
   - The Shell Rename dialog's input box is visible again.
 - The Settings window's `Save & Close` caption now displays the ampersand correctly (was rendered as `Save _Close`).
+- These layout fixes require the matching DarkUI fork update (shipped together). Note: forms now use DPI-based autoscaling, so Windows "Text size" accessibility enlargement at 100% display scale no longer grows controls with the font.

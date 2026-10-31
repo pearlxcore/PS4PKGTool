@@ -189,8 +189,14 @@ namespace PS4PKGTool
             DpiChanged += (s, e) => BeginInvoke(() => BeginInvoke(AlignPkagedListRows));
             // The grouping combo's runtime height lands from its own scaled
             // item metrics some time after this pass — re-align whenever it
-            // changes size so the row never stays stale.
-            cbGroupBy.SizeChanged += (s, e) => BeginInvoke(AlignGroupedByRow);
+            // changes size so the row never stays stale. BeginInvoke throws
+            // before the handle exists, and child resizes during ctor layout
+            // are possible — guard it.
+            cbGroupBy.SizeChanged += (s, e) =>
+            {
+                if (IsHandleCreated)
+                    BeginInvoke(AlignGroupedByRow);
+            };
 
             // Tag-bind image/icon extraction menu items for data-driven dispatch
             globalExtractImagesAndIconToolStripMenuItem1.Tag = $"{ImageIconExtractionType.ALL}|{PKGSelectionType.ALL}";
@@ -4188,13 +4194,19 @@ namespace PS4PKGTool
 
         private static void AlignLabelToControl(Control label, Control neighbor)
         {
-            // Flow rows position every child at its own Margin.Top; center the
-            // label on the neighbor within that scheme. Margins are scaled by
-            // WinForms on DPI changes, and this pass re-runs after those, so a
+            // Flow rows position every child at (row top + its own
+            // Margin.Top); center the label on the neighbor within that
+            // scheme. The margin must stay ROW-RELATIVE — an absolute Y
+            // double-counts the row offset once the flow panel wraps to a
+            // second row at narrow widths. The row's top is the neighbor's
+            // position minus its own margin; margins are scaled by WinForms
+            // on DPI changes, and this pass re-runs after those, so a
             // device-pixel value here stays correct.
+            int rowTop = neighbor.Top - neighbor.Margin.Top;
             int top = neighbor.Top + (neighbor.Height - label.Height) / 2;
-            if (label.Margin.Top != top)
-                label.Margin = new Padding(label.Margin.Left, top, label.Margin.Right, label.Margin.Bottom);
+            int margin = Math.Max(0, top - rowTop);
+            if (label.Margin.Top != margin)
+                label.Margin = new Padding(label.Margin.Left, margin, label.Margin.Right, label.Margin.Bottom);
         }
 
         /// <summary>Scales a 96-DPI design-unit length to this form's DPI for
