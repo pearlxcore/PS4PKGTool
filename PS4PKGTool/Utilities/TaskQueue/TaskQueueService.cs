@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using PS4PKGTool.Core.Diagnostics;
 
 namespace PS4PKGTool.Utilities.TaskQueue;
 
@@ -184,26 +185,43 @@ public sealed class TaskQueueService : IDisposable
                 // queue and invokes user handlers. Run them outside _gate so we
                 // never perform file I/O or call foreign code while holding it.
                 task.SetStatus(QueueTaskStatus.Running);
+                CoreLog.Info($"Task started: {task.Type} - {task.DisplayName}");
                 RaiseChanged(forcePersistence: true);
                 try
                 {
                     QueueTaskExecutionResult result = await task.ExecuteAsync(_shutdown.Token).ConfigureAwait(false);
                     if (_shutdown.IsCancellationRequested)
+                    {
                         task.MarkInterrupted();
+                        CoreLog.Warn($"Task interrupted: {task.Type} - {task.DisplayName}");
+                    }
                     else if (task.CancellationRequested)
+                    {
                         task.MarkCancelled("Cancelled.");
+                        CoreLog.Warn($"Task cancelled: {task.Type} - {task.DisplayName}");
+                    }
                     else
+                    {
                         task.SetStatus(result.Succeeded ? QueueTaskStatus.Completed : QueueTaskStatus.Failed,
                             result.Message, result.OutputPath);
+                        if (result.Succeeded)
+                            CoreLog.Info($"Task finished: {task.Type} - {task.DisplayName}");
+                        else
+                            CoreLog.Err($"Task failed: {task.Type} - {task.DisplayName}: {result.Message}");
+                    }
                 }
                 catch (OperationCanceledException)
                 {
                     if (!_shutdown.IsCancellationRequested)
+                    {
                         task.MarkCancelled("Cancelled.");
+                        CoreLog.Warn($"Task cancelled: {task.Type} - {task.DisplayName}");
+                    }
                 }
                 catch (Exception ex)
                 {
                     task.SetStatus(QueueTaskStatus.Failed, ex.Message);
+                    CoreLog.Err($"Task failed: {task.Type} - {task.DisplayName}: {ex.Message}");
                 }
                 RaiseChanged(forcePersistence: true);
                     if (!AutoStart) break;
@@ -283,6 +301,10 @@ public sealed record QueueTaskExecutionResult(bool Succeeded, string Message = "
 public sealed class QueuedPackageTask
 {
     private readonly object _stateGate = new();
+    private readonly object _logGate = new();
+    private readonly List<string> _logLines = [];
+    private long _logVersion;
+    private const int MaxLogLines = 2000;
     private readonly Func<QueuedPackageTask, CancellationToken, Task<QueueTaskExecutionResult>> _execute;
     private CancellationTokenSource _cancellation = new();
 
@@ -315,6 +337,32 @@ public sealed class QueuedPackageTask
     public DateTime? CompletedAtUtc { get; private set; }
 
     public event EventHandler? Changed;
+
+    /// <summary>Timestamped process log shown in the Tasks tab (last 2000 lines).</summary>
+    public IReadOnlyList<string> LogLines
+    {
+        get { lock (_logGate) return _logLines.ToArray(); }
+    }
+
+    /// <summary>Monotonic version of <see cref="LogLines"/>; changes on every append.</summary>
+    public long LogVersion
+    {
+        get { lock (_logGate) return _logVersion; }
+    }
+
+    /// <summary>Appends one timestamped process-log line (thread-safe).</summary>
+    public void Log(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        lock (_logGate)
+        {
+            _logLines.Add($"{DateTime.Now:HH:mm:ss}  {message}");
+            if (_logLines.Count > MaxLogLines)
+                _logLines.RemoveRange(0, _logLines.Count - MaxLogLines);
+            _logVersion++;
+        }
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
 
     public void Report(QueueTaskProgress progress)
     {

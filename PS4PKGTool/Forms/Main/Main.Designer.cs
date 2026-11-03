@@ -357,6 +357,9 @@ namespace PS4PKGTool
             _tabLog = new DarkUI.Controls.DarkTabPage();
             _tbLogBox = new DarkUI.Controls.DarkTextBox();
             _tasksTab = new DarkUI.Controls.DarkTabPage();
+            taskSplit = new DarkUI.Controls.DarkSplitContainer();
+            taskSplitPane1 = new DarkUI.Controls.DarkSplitPane();
+            taskSplitPane2 = new DarkUI.Controls.DarkSplitPane();
             _tasksGrid = new DarkUI.Controls.DarkDataGridView();
             taskTypeColumn = new DataGridViewTextBoxColumn();
             taskNameColumn = new DataGridViewTextBoxColumn();
@@ -374,6 +377,8 @@ namespace PS4PKGTool
             _taskRetry = new DarkUI.Controls.DarkButton();
             _taskOpenOutput = new DarkUI.Controls.DarkButton();
             _taskRemove = new DarkUI.Controls.DarkButton();
+            _taskLogBox = new DarkUI.Controls.DarkRichTextBox();
+            _taskCopyLog = new DarkUI.Controls.DarkButton();
             tasksToolbar = new DarkUI.Controls.DarkFooterBar();
             _taskAutoStart = new DarkUI.Controls.DarkCheckBox();
             _taskStartNext = new DarkUI.Controls.DarkButton();
@@ -3402,11 +3407,37 @@ namespace PS4PKGTool
             _tbLogBox.Size = new System.Drawing.Size(1186, 712);
             _tbLogBox.TabIndex = 0;
             // 
+            // taskSplit
+            // 
+            taskSplit.Controls.Add(taskSplitPane1);
+            taskSplit.Controls.Add(taskSplitPane2);
+            taskSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            taskSplit.Location = new System.Drawing.Point(12, 12);
+            taskSplit.Name = "taskSplit";
+            taskSplit.Orientation = DarkUI.Controls.DarkSplitContainer.DarkSplitOrientation.Horizontal;
+            taskSplit.Size = new System.Drawing.Size(1162, 688);
+            taskSplit.TabIndex = 0;
+            // 
+            // taskSplitPane1
+            // 
+            taskSplitPane1.Controls.Add(_tasksGrid);
+            taskSplitPane1.Controls.Add(tasksToolbar);
+            taskSplitPane1.Location = new System.Drawing.Point(0, 0);
+            taskSplitPane1.Name = "taskSplitPane1";
+            taskSplitPane1.Size = new System.Drawing.Size(1162, 341);
+            taskSplitPane1.TabIndex = 0;
+            // 
+            // taskSplitPane2
+            // 
+            taskSplitPane2.Controls.Add(taskDetailsLayout);
+            taskSplitPane2.Location = new System.Drawing.Point(0, 0);
+            taskSplitPane2.Name = "taskSplitPane2";
+            taskSplitPane2.Size = new System.Drawing.Size(1162, 341);
+            taskSplitPane2.TabIndex = 0;
+            // 
             // _tasksTab
             // 
-            _tasksTab.Controls.Add(_tasksGrid);
-            _tasksTab.Controls.Add(taskDetailsLayout);
-            _tasksTab.Controls.Add(tasksToolbar);
+            _tasksTab.Controls.Add(taskSplit);
             _tasksTab.ForeColor = System.Drawing.Color.Gainsboro;
             _tasksTab.Location = new System.Drawing.Point(4, 32);
             _tasksTab.Name = "_tasksTab";
@@ -3475,20 +3506,22 @@ namespace PS4PKGTool
             taskDetailsLayout.Controls.Add(_taskDetailLabel, 0, 3);
             taskDetailsLayout.Controls.Add(_taskOverallLabel, 0, 4);
             taskDetailsLayout.Controls.Add(_taskOverallProgress, 0, 5);
-            taskDetailsLayout.Controls.Add(taskActionsPanel, 0, 6);
-            taskDetailsLayout.Dock = DockStyle.Bottom;
+            taskDetailsLayout.Controls.Add(_taskLogBox, 0, 6);
+            taskDetailsLayout.Controls.Add(taskActionsPanel, 0, 7);
+            taskDetailsLayout.Dock = DockStyle.Fill;
             taskDetailsLayout.Location = new System.Drawing.Point(12, 440);
             taskDetailsLayout.Name = "taskDetailsLayout";
             taskDetailsLayout.Padding = new Padding(0, 14, 0, 0);
-            taskDetailsLayout.RowCount = 7;
+            taskDetailsLayout.RowCount = 8;
             taskDetailsLayout.RowStyles.Add(new RowStyle());
             taskDetailsLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
             taskDetailsLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
             taskDetailsLayout.RowStyles.Add(new RowStyle());
             taskDetailsLayout.RowStyles.Add(new RowStyle());
             taskDetailsLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
+            taskDetailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             taskDetailsLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-            taskDetailsLayout.Size = new System.Drawing.Size(1162, 260);
+            taskDetailsLayout.Size = new System.Drawing.Size(1162, 400);
             taskDetailsLayout.TabIndex = 1;
             // 
             // _taskStageLabel
@@ -3548,12 +3581,25 @@ namespace PS4PKGTool
             _taskOverallProgress.Size = new System.Drawing.Size(1162, 24);
             _taskOverallProgress.TabIndex = 2;
             // 
+            // _taskLogBox
+            // 
+            _taskLogBox.Dock = DockStyle.Fill;
+            _taskLogBox.Font = new System.Drawing.Font("Consolas", 9F);
+            _taskLogBox.Location = new System.Drawing.Point(0, 0);
+            _taskLogBox.Name = "_taskLogBox";
+            _taskLogBox.ReadOnly = true;
+            _taskLogBox.Size = new System.Drawing.Size(1162, 140);
+            _taskLogBox.TabIndex = 6;
+            _taskLogBox.TextPadding = new System.Windows.Forms.Padding(3);
+            _taskLogBox.WordWrap = true;
+            // 
             // taskActionsPanel
             // 
             taskActionsPanel.Controls.Add(_taskCancel);
             taskActionsPanel.Controls.Add(_taskRetry);
             taskActionsPanel.Controls.Add(_taskOpenOutput);
             taskActionsPanel.Controls.Add(_taskRemove);
+            taskActionsPanel.Controls.Add(_taskCopyLog);
             taskActionsPanel.Dock = DockStyle.Fill;
             taskActionsPanel.Location = new System.Drawing.Point(0, 196);
             taskActionsPanel.Margin = new Padding(0, 12, 0, 0);
@@ -3597,6 +3643,15 @@ namespace PS4PKGTool
             _taskRemove.TabIndex = 3;
             _taskRemove.Text = "Remove";
             _taskRemove.Click += taskRemove_Click;
+            // 
+            // _taskCopyLog
+            // 
+            _taskCopyLog.Location = new System.Drawing.Point(429, 5);
+            _taskCopyLog.Name = "_taskCopyLog";
+            _taskCopyLog.Size = new System.Drawing.Size(100, 26);
+            _taskCopyLog.TabIndex = 4;
+            _taskCopyLog.Text = "Copy log";
+            _taskCopyLog.Click += taskCopyLog_Click;
             // 
             // tasksToolbar
             // 
@@ -4345,6 +4400,9 @@ namespace PS4PKGTool
         private ToolStripMenuItem RpiUninstallThemePKGToolStripMenuItem2;
         private DarkUI.Controls.DarkTabControl mainTabControl;
         private DarkUI.Controls.DarkTabPage _tasksTab;
+        private DarkUI.Controls.DarkSplitContainer taskSplit;
+        private DarkUI.Controls.DarkSplitPane taskSplitPane1;
+        private DarkUI.Controls.DarkSplitPane taskSplitPane2;
         private DarkUI.Controls.DarkFooterBar tasksToolbar;
         private DarkUI.Controls.DarkCheckBox _taskAutoStart;
         private DarkUI.Controls.DarkButton _taskStartNext;
@@ -4366,6 +4424,8 @@ namespace PS4PKGTool
         private DarkUI.Controls.DarkButton _taskRetry;
         private DarkUI.Controls.DarkButton _taskOpenOutput;
         private DarkUI.Controls.DarkButton _taskRemove;
+        private DarkUI.Controls.DarkRichTextBox _taskLogBox;
+        private DarkUI.Controls.DarkButton _taskCopyLog;
         private System.Windows.Forms.Timer taskRefreshTimer;
         private DarkUI.Controls.DarkTabPage tabPage1;
         private DarkUI.Controls.DarkTabPage tabPage2;

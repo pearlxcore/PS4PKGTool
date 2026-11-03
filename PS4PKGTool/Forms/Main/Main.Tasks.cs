@@ -36,6 +36,9 @@ public partial class Main
     private bool _taskQueueRunObserved;
     private bool _taskQueueCompletionDialogPending;
     private int _taskQueueSummaryGeneration;
+    private Guid? _taskLogTaskId;
+    private long _taskLogVersion = -1;
+    private int _taskLogShownLineCount;
     private readonly IPackageTaskFactory _packageTaskFactory = new PackageTaskFactory();
 
     private void InitializeTaskQueue()
@@ -281,7 +284,7 @@ public partial class Main
 
     private void UpdateSelectedTaskDetails()
     {
-        if (_taskStageLabel is null || _taskOverallProgress is null || _taskCurrentProgress is null || _taskProgressLabel is null || _taskDetailLabel is null) return;
+        if (_taskStageLabel is null || _taskOverallProgress is null || _taskCurrentProgress is null || _taskProgressLabel is null || _taskDetailLabel is null || _taskLogBox is null || _taskCopyLog is null) return;
         QueuedPackageTask? task = SelectedTask;
         if (task is null)
         {
@@ -292,6 +295,11 @@ public partial class Main
             _taskDetailLabel.Text = "";
             SetProgressValue(_taskOverallProgress, 0);
             SetProgressValue(_taskCurrentProgress, 0);
+            _taskLogBox.Clear();
+            _taskLogTaskId = null;
+            _taskLogVersion = -1;
+            _taskLogShownLineCount = 0;
+            _taskCopyLog.Enabled = false;
             return;
         }
         QueueTaskProgress p = task.Progress;
@@ -315,6 +323,58 @@ public partial class Main
         _taskRetry!.Enabled = task.Status is QueueTaskStatus.Failed or QueueTaskStatus.Cancelled or QueueTaskStatus.Interrupted;
         _taskRemove!.Enabled = task.Status is not (QueueTaskStatus.Running or QueueTaskStatus.Cancelling);
         _taskOpenOutput!.Enabled = task.Status == QueueTaskStatus.Completed && !string.IsNullOrWhiteSpace(task.OutputPath);
+        if (_taskLogTaskId != task.Id)
+        {
+            _taskLogTaskId = task.Id;
+            _taskLogVersion = -1;
+            _taskLogShownLineCount = 0;
+            _taskLogBox.Clear();
+        }
+        long logVersion = task.LogVersion;
+        if (_taskLogVersion != logVersion)
+        {
+            var lines = task.LogLines;
+            // A trimmed ring buffer can keep the same count while shifting
+            // content; rebuild in that case instead of appending duplicates.
+            bool rebuild = lines.Count < _taskLogShownLineCount
+                || (lines.Count == _taskLogShownLineCount && _taskLogShownLineCount > 0);
+            if (rebuild)
+            {
+                _taskLogBox.Clear();
+                _taskLogShownLineCount = 0;
+            }
+            if (lines.Count > _taskLogShownLineCount)
+            {
+                bool follow = IsTaskLogAtBottom();
+                var rtb = _taskLogBox.InnerRichTextBox;
+                rtb.SelectionStart = rtb.TextLength;
+                rtb.SelectionLength = 0;
+                for (int i = _taskLogShownLineCount; i < lines.Count; i++)
+                    rtb.AppendText(lines[i] + Environment.NewLine);
+                _taskLogShownLineCount = lines.Count;
+                if (follow) _taskLogBox.ScrollToCaret();
+            }
+            _taskLogVersion = logVersion;
+        }
+        _taskCopyLog.Enabled = _taskLogBox.Text.Length > 0;
+    }
+
+    /// <summary>
+    /// True when the task log was already scrolled to the bottom, so new lines
+    /// may follow; a user who scrolled up keeps their position.
+    /// </summary>
+    private bool IsTaskLogAtBottom()
+    {
+        var bar = _taskLogBox.VerticalScrollBar;
+        int bottom = Math.Max(0, bar.Maximum - bar.ViewSize);
+        return bar.Value >= bottom - 1;
+    }
+
+    private void taskCopyLog_Click(object? sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(_taskLogBox.Text)) return;
+        try { Clipboard.SetText(_taskLogBox.Text); }
+        catch (Exception ex) { Logger.LogWarning("Copy task log failed: " + ex.Message); }
     }
 
     private void SetTaskProgressLabelAppearance(bool completed)

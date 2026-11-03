@@ -54,7 +54,6 @@ public sealed class Ps4FfpfscConverterService
         {
             // ── Step 1: extract ─────────────────────────────────────────
             string pkgFileName = Path.GetFileName(options.PkgPath);
-            CoreLog.Info($"FFPFSC: Extracting {pkgFileName}");
             progress?.Report(new FfpfscConvertProgress(FfpfscConvertStages.Extracting, 1, TotalSteps,
                 CurrentFile: pkgFileName));
             var extractor = new PkgExtractionService(options.Passcode);
@@ -104,7 +103,6 @@ public sealed class Ps4FfpfscConverterService
 
             // ── Step 5: build the FFPFSC container ──────────────────────
             progress?.Report(new FfpfscConvertProgress(FfpfscConvertStages.Building, 5, TotalSteps));
-            CoreLog.Info($"FFPFSC: Building image for {titleId}");
             var buildOptions = new FfpfscBuildOptions
             {
                 InnerFileName = titleId + ".exfat",
@@ -144,10 +142,6 @@ public sealed class Ps4FfpfscConverterService
                 verification,
                 npbindRepaired);
 
-            string savings = build.PayloadSavingsPercent > 0
-                ? $" ({build.PayloadSavingsPercent:F1}% PFSC savings)"
-                : "";
-            CoreLog.Info($"FFPFSC: {pkgFileName} -> {build.OutputPath}{savings}");
             progress?.Report(new FfpfscConvertProgress(FfpfscConvertStages.Done, TotalSteps, TotalSteps));
             return (true, "", result);
         }

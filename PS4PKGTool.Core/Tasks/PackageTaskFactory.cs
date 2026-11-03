@@ -33,7 +33,9 @@ public sealed class PackageTaskFactory(IPackageExtractionService? extractionServ
                     string file = layout == ExtractLayout.Merged ? DumpLayout.MapToLogical(p.CurrentFile) : p.CurrentFile;
                     queued.Report(new QueueTaskProgress("Extracting PKG", 1, 1, CurrentItems: p.Current + 1, TotalItems: p.Total, CurrentFile: file));
                 });
-                var result = await _extractionService.ExtractFullAsync(packagePath, outputDirectory, null, cancellationToken, progress, logCompletion: true, layout: layout).ConfigureAwait(false);
+                var stage = new Progress<string>(message => queued.Log($"Extract: {message}"));
+                var result = await _extractionService.ExtractFullAsync(packagePath, outputDirectory, stage, cancellationToken, progress, logCompletion: true, layout: layout).ConfigureAwait(false);
+                queued.Log(result.Succeeded ? "Extract finished." : "Extract failed: " + result.Message);
                 return new QueueTaskExecutionResult(result.Succeeded, result.Message, outputDirectory);
             }, JsonSerializer.Serialize(new ExtractionTaskPayload { OutputDirectory = outputDirectory, Layout = layout }), id);
         if (saved is not null) task.RestoreState(saved);
@@ -57,9 +59,34 @@ public sealed class PackageTaskFactory(IPackageExtractionService? extractionServ
         ArgumentNullException.ThrowIfNull(request); ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
         var task = new QueuedPackageTask("Merge PKG", displayName, request.BasePkgPath, request.OutputPkgPath, async (queued, ct) =>
         {
-            var progress = new Progress<PkgMergeProgress>(p => queued.Report(new QueueTaskProgress(p.Stage, p.Step, p.TotalSteps, p.CurrentBytes, p.TotalBytes, p.CurrentItem + 1, p.TotalItems, p.CurrentFile)));
-            var result = await Task.Run(() => new PkgMergeService().Merge(request with { Progress = progress, CancellationToken = ct }), ct).ConfigureAwait(false);
-            return new QueueTaskExecutionResult(true, "Merged PKG created.", result.OutputPkgPath);
+            string? lastStage = null;
+            var progress = new Progress<PkgMergeProgress>(p =>
+            {
+                queued.Report(new QueueTaskProgress(p.Stage, p.Step, p.TotalSteps, p.CurrentBytes, p.TotalBytes, p.CurrentItem + 1, p.TotalItems, p.CurrentFile));
+                // Stage changes only: per-file progress would flood the log tab.
+                if (!string.Equals(p.Stage, lastStage, StringComparison.Ordinal))
+                {
+                    lastStage = p.Stage;
+                    queued.Log($"Merge: {p.Stage}" + (p.TotalSteps > 0 ? $" (step {p.Step}/{p.TotalSteps})" : ""));
+                }
+            });
+            queued.Log($"Merge started: {request.BasePkgPath} + {request.UpdatePkgPath}");
+            try
+            {
+                var result = await Task.Run(() => new PkgMergeService().Merge(request with { Progress = progress, CancellationToken = ct }), ct).ConfigureAwait(false);
+                queued.Log($"Merge finished: {result.OutputPkgPath} ({result.OutputSize / 1e9:F2} GB, {result.Elapsed.TotalSeconds:F0}s)");
+                return new QueueTaskExecutionResult(true, "Merged PKG created.", result.OutputPkgPath);
+            }
+            catch (OperationCanceledException)
+            {
+                queued.Log("Merge cancelled.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                queued.Log("Merge failed: " + ex.Message);
+                throw;
+            }
         }, JsonSerializer.Serialize(new MergeTaskPayload(request.BasePkgPath, request.UpdatePkgPath, request.OutputPkgPath, null, null, request.ValidateAfterBuild, request.PfscMode, request.WorkerCount, request.WorkDirectory, request.KeepWorkDirectory, request.CleanupWorkDirectoryOnFailure, request.Title, request.TitleId, request.ContentId, request.SkipDiskSpaceCheck)), id); if (saved is not null) task.RestoreState(saved); return task;
     }
 
@@ -68,8 +95,20 @@ public sealed class PackageTaskFactory(IPackageExtractionService? extractionServ
         ArgumentNullException.ThrowIfNull(options); ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
         var task = new QueuedPackageTask("PKG → FFPFSC", displayName, options.PkgPath, options.OutputPath, async (queued, ct) =>
         {
-            var progress = new Progress<FfpfscConvertProgress>(p => queued.Report(new QueueTaskProgress(p.Stage, p.CurrentStep, p.TotalSteps, p.BytesProcessed, p.TotalBytes, p.ItemsProcessed, p.ItemsTotal, p.CurrentFile)));
+            string? lastStage = null;
+            var progress = new Progress<FfpfscConvertProgress>(p =>
+            {
+                queued.Report(new QueueTaskProgress(p.Stage, p.CurrentStep, p.TotalSteps, p.BytesProcessed, p.TotalBytes, p.ItemsProcessed, p.ItemsTotal, p.CurrentFile));
+                if (!string.Equals(p.Stage, lastStage, StringComparison.Ordinal))
+                {
+                    lastStage = p.Stage;
+                    queued.Log($"FFPFSC: {p.Stage}");
+                }
+            });
             var result = await new Ps4FfpfscConverterService().ConvertAsync(options, progress, ct).ConfigureAwait(false);
+            queued.Log(result.Succeeded
+                ? "FFPFSC finished: " + (result.Result?.OutputPath ?? options.OutputPath)
+                : "FFPFSC failed: " + result.Message);
             return new QueueTaskExecutionResult(result.Succeeded, result.Message, result.Result?.OutputPath ?? options.OutputPath);
         }, JsonSerializer.Serialize(options with { Passcode = null }), id); if (saved is not null) task.RestoreState(saved); return task;
     }
