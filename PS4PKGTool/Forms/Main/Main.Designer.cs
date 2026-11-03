@@ -2490,7 +2490,7 @@ namespace PS4PKGTool
             lblCategory.Location = new System.Drawing.Point(0, 5);
             lblCategory.Margin = new Padding(0, 5, 4, 0);
             lblCategory.Name = "lblCategory";
-            lblCategory.Size = new System.Drawing.Size(55, 15);
+            lblCategory.Size = new System.Drawing.Size(60, 15);
             lblCategory.TabIndex = 0;
             lblCategory.Text = "Category";
             // 
@@ -2510,7 +2510,7 @@ namespace PS4PKGTool
             lblRegion.Location = new System.Drawing.Point(221, 5);
             lblRegion.Margin = new Padding(0, 5, 4, 0);
             lblRegion.Name = "lblRegion";
-            lblRegion.Size = new System.Drawing.Size(44, 15);
+            lblRegion.Size = new System.Drawing.Size(48, 15);
             lblRegion.TabIndex = 2;
             lblRegion.Text = "Region";
             // 
@@ -2530,7 +2530,10 @@ namespace PS4PKGTool
             lblFilterSysVer.Location = new System.Drawing.Point(431, 5);
             lblFilterSysVer.Margin = new Padding(0, 5, 4, 0);
             lblFilterSysVer.Name = "lblFilterSysVer";
-            lblFilterSysVer.Size = new System.Drawing.Size(107, 15);
+            // 107 design units clipped "Required Firmware ≥" into two lines at
+            // high DPI (measured need: 118 at 200%); a wrapped label cannot
+            // center on its textbox. 120 keeps it on one line.
+            lblFilterSysVer.Size = new System.Drawing.Size(120, 15);
             lblFilterSysVer.TabIndex = 4;
             lblFilterSysVer.Text = "Required Firmware ≥";
             // 
@@ -2550,7 +2553,7 @@ namespace PS4PKGTool
             lblType.Location = new System.Drawing.Point(609, 5);
             lblType.Margin = new Padding(0, 5, 4, 0);
             lblType.Name = "lblType";
-            lblType.Size = new System.Drawing.Size(32, 15);
+            lblType.Size = new System.Drawing.Size(38, 15);
             lblType.TabIndex = 6;
             lblType.Text = "Type";
             // 
@@ -2613,7 +2616,7 @@ namespace PS4PKGTool
             btnFilterClear.Location = new System.Drawing.Point(470, 28);
             btnFilterClear.Margin = new Padding(0, 0, 0, 4);
             btnFilterClear.Name = "btnFilterClear";
-            btnFilterClear.Size = new System.Drawing.Size(64, 24);
+            btnFilterClear.Size = new System.Drawing.Size(80, 24);
             btnFilterClear.TabIndex = 87;
             btnFilterClear.Text = "Clear";
             btnFilterClear.Click += btnFilterClear_Click;
@@ -2739,10 +2742,10 @@ namespace PS4PKGTool
             cbGroupBy.DropDownWidth = 185;
             cbGroupBy.Font = new System.Drawing.Font("Segoe UI", 9F);
             cbGroupBy.Items.AddRange(new object[] { "Title", "Title ID", "Required Firmware", "PKG Type", "Category", "ShadPS4" });
-            cbGroupBy.Location = new System.Drawing.Point(62, 3);
+            cbGroupBy.Location = new System.Drawing.Point(75, 3);
             cbGroupBy.Name = "cbGroupBy";
             cbGroupBy.SelectedIndex = 1;
-            cbGroupBy.Size = new System.Drawing.Size(185, 24);
+            cbGroupBy.Size = new System.Drawing.Size(172, 24);
             cbGroupBy.TabIndex = 105;
             cbGroupBy.SelectedIndexChanged += CbGroupBy_SelectedIndexChanged;
             // 
@@ -2751,7 +2754,8 @@ namespace PS4PKGTool
             darkLabelGroupBy.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabelGroupBy.Location = new System.Drawing.Point(4, 8);
             darkLabelGroupBy.Name = "darkLabelGroupBy";
-            darkLabelGroupBy.Size = new System.Drawing.Size(55, 15);
+            // 68 (was 55): "Group by:" clipped to "Group" at high DPI.
+            darkLabelGroupBy.Size = new System.Drawing.Size(68, 15);
             darkLabelGroupBy.TabIndex = 106;
             darkLabelGroupBy.Text = "Group by:";
             // 
@@ -3335,7 +3339,7 @@ namespace PS4PKGTool
             darkLabel5.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabel5.Location = new System.Drawing.Point(3, 15);
             darkLabel5.Name = "darkLabel5";
-            darkLabel5.Size = new System.Drawing.Size(59, 15);
+            darkLabel5.Size = new System.Drawing.Size(65, 15);
             darkLabel5.TabIndex = 96;
             darkLabel5.Text = "Passcode:";
             // 
@@ -3460,6 +3464,8 @@ namespace PS4PKGTool
             _tasksGrid.MultiSelect = false;
             _tasksGrid.Name = "_tasksGrid";
             _tasksGrid.ReadOnly = true;
+            // Design units; DarkUI scales this by DPI.
+            _tasksGrid.RowTemplate.Height = 23;
             _tasksGrid.Size = new System.Drawing.Size(1162, 404);
             _tasksGrid.TabIndex = 0;
             _tasksGrid.SelectionChanged += tasksGrid_SelectionChanged;
@@ -4068,8 +4074,8 @@ namespace PS4PKGTool
             // Main
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(1219, 817);
             Controls.Add(darkMenuStrip1);
             Controls.Add(mainTabControl);

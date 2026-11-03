@@ -1,4 +1,4 @@
-namespace PS4PKGTool
+﻿namespace PS4PKGTool
 {
     partial class Shadps4SetupWizard
     {
@@ -296,8 +296,8 @@ namespace PS4PKGTool
             //
             // Shadps4SetupWizard
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(620, 400);
             this.Controls.Add(panelStep1);
             this.Controls.Add(panelStep2);

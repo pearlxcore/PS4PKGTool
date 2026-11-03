@@ -182,6 +182,21 @@ namespace PS4PKGTool
             _pkgListTabTopGap = Math.Max(0, subTabControl.Top - grpFilter.Bottom);
             _pkgListTabBottomGap = Math.Max(0, tabPage1.ClientSize.Height - subTabControl.Bottom);
             _pkgListLayoutInitialized = true;
+            // Crossing monitors with a different DPI re-runs DarkLabel's font
+            // height pass, which re-queues its grow after this form-level
+            // event — align only once that queued work has drained, hence the
+            // nested invoke.
+            DpiChanged += (s, e) => BeginInvoke(() => BeginInvoke(AlignPkagedListRows));
+            // The grouping combo's runtime height lands from its own scaled
+            // item metrics some time after this pass — re-align whenever it
+            // changes size so the row never stays stale. BeginInvoke throws
+            // before the handle exists, and child resizes during ctor layout
+            // are possible — guard it.
+            cbGroupBy.SizeChanged += (s, e) =>
+            {
+                if (IsHandleCreated)
+                    BeginInvoke(AlignGroupedByRow);
+            };
 
             // Tag-bind image/icon extraction menu items for data-driven dispatch
             globalExtractImagesAndIconToolStripMenuItem1.Tag = $"{ImageIconExtractionType.ALL}|{PKGSelectionType.ALL}";
@@ -570,17 +585,42 @@ namespace PS4PKGTool
 
         private bool _wasMaximized;
 
-        /// <summary>Restoring from maximized lands on the minimum width (1150).</summary>
+        /// <summary>Restoring from maximized lands on the minimum width.
+        /// MinimumSize is DPI-scaled by WinForms, so this stays proportional
+        /// at every scaling factor (a literal 1150 would not be).</summary>
         private void Main_Resize(object sender, EventArgs e)
         {
             if (_wasMaximized && WindowState == FormWindowState.Normal)
-                Width = 1150;
+                Width = MinimumSize.Width;
             _wasMaximized = WindowState == FormWindowState.Maximized;
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
             Logger.LogInformation("App started.");
+            // The form-level DPI scale pass resizes AutoSize children (e.g.
+            // the filter checkboxes) without a follow-up layout, leaving them
+            // doubled at high DPI — force the flow panel to re-measure once
+            // the scaling has fully settled.
+            flpFilter.PerformLayout();
+            BeginInvoke(() =>
+            {
+                flpFilter.PerformLayout();
+                // Labels are centered on their combos after the DPI scale
+                // pass has fully settled (see AlignFilterRowLabels).
+                AlignPkagedListRows();
+
+                // Hidden tab pages can keep stale anchoring after the DPI
+                // scale + maximize ordering — the Grouped list ends up stuck
+                // at its design width. Setting its correct bounds once heals
+                // the anchor info; it tracks resizes from there. It fills
+                // the page below the Group-by row (design Y=30).
+                int glvTop = (int)Math.Round(30f * groupedListView.DeviceDpi / 96f);
+                groupedListView.Bounds = new Rectangle(
+                    0, glvTop,
+                    tabPageGroup.ClientSize.Width,
+                    Math.Max(0, tabPageGroup.ClientSize.Height - glvTop));
+            });
             try
             {
                 SetupFilterChecklists();
@@ -4074,17 +4114,18 @@ namespace PS4PKGTool
             if (!_pkgListLayoutInitialized)
                 return;
 
-            flpFilter.Width = grpFilter.ClientSize.Width - 16;
+            flpFilter.Width = grpFilter.ClientSize.Width - ScaleDpi(16);
             flpFilter.Height = flpFilter.GetPreferredSize(new Size(flpFilter.Width, 0)).Height;
             RepositionFilterRows();
+            AlignFilterRowLabels();
         }
 
         private void RepositionFilterRows()
         {
-            flowChips.Width = grpFilter.ClientSize.Width - 16 - lblFilterCount.Width - 8;
-            flowChips.Top = flpFilter.Bottom + 8;
-            lblFilterCount.Top = flowChips.Top + 3;
-            grpFilter.Height = flowChips.Bottom + 8;
+            flowChips.Width = grpFilter.ClientSize.Width - ScaleDpi(16) - lblFilterCount.Width - ScaleDpi(8);
+            flowChips.Top = flpFilter.Bottom + ScaleDpi(8);
+            lblFilterCount.Top = flowChips.Top + ScaleDpi(3);
+            grpFilter.Height = flowChips.Bottom + ScaleDpi(8);
             // Keep the PKG-list sub-tab glued below the filter group: it has
             // a fixed designer Top and would leave a gap when the groupbox
             // shrinks to one line on maximize.
@@ -4095,6 +4136,84 @@ namespace PS4PKGTool
             subTabControl.Height = Math.Max(0,
                 tabPage1.ClientSize.Height - subTabControl.Top - _pkgListTabBottomGap);
         }
+
+        /// <summary>
+        /// Centers each filter label on the control it annotates. DarkLabel
+        /// grows its height to fit the scaled font (DarkUI ApplyDpiHeight),
+        /// so the designer height no longer matches: the flow panel places
+        /// each child at its own Margin.Top, and the label's top margin (5
+        /// design units) then leaves the vertically-centered text visibly
+        /// low beside its combo (measured ~6 px at 200%, ~9 px at 175%).
+        /// Encode the centering in the margin itself — the value the flow
+        /// panel re-applies on every relayout — so alignment survives
+        /// resizes; recompute here because it depends on the current,
+        /// font-grown heights. The AutoSize checkbox in the same row hugs
+        /// its font and needs no help.
+        /// </summary>
+        private void AlignFilterRowLabels()
+        {
+            if (!_pkgListLayoutInitialized)
+                return;
+            AlignLabelToControl(lblCategory, ccbCategory);
+            AlignLabelToControl(lblRegion, ccbRegion);
+            AlignLabelToControl(lblFilterSysVer, tbFilterSysVer);
+            AlignLabelToControl(lblType, ccbType);
+            AlignLabelToControl(lblShadps4, ccbShadps4);
+            AlignGroupedByRow();
+        }
+
+        /// <summary>
+        /// Centers the Grouped view's row labels on the grouping combo. The
+        /// combo's runtime height comes from its own scaled item metrics and
+        /// is taller than the designer's 24 units, while the labels' grown
+        /// heights drift the other way — left alone, "Group by:" sits
+        /// visibly low beside the combo at high DPI. The row is absolutely
+        /// positioned (no flow engine), so a corrected Top persists.
+        /// </summary>
+        private void AlignGroupedByRow()
+        {
+            if (!_pkgListLayoutInitialized)
+                return;
+            AlignRowTop(darkLabelGroupBy, cbGroupBy);
+            AlignRowTop(darkLabelGroupCount, cbGroupBy);
+            AlignRowTop(lblGlvFilterHint, cbGroupBy);
+        }
+
+        private static void AlignRowTop(Control label, Control neighbor)
+        {
+            int top = neighbor.Top + (neighbor.Height - label.Height) / 2;
+            if (label.Top != top)
+                label.Top = top;
+        }
+
+        /// <summary>Re-runs every PKG-list row alignment that depends on
+        /// settled font metrics.</summary>
+        private void AlignPkagedListRows()
+        {
+            AlignFilterRowLabels();
+        }
+
+        private static void AlignLabelToControl(Control label, Control neighbor)
+        {
+            // Flow rows position every child at (row top + its own
+            // Margin.Top); center the label on the neighbor within that
+            // scheme. The margin must stay ROW-RELATIVE — an absolute Y
+            // double-counts the row offset once the flow panel wraps to a
+            // second row at narrow widths. The row's top is the neighbor's
+            // position minus its own margin; margins are scaled by WinForms
+            // on DPI changes, and this pass re-runs after those, so a
+            // device-pixel value here stays correct.
+            int rowTop = neighbor.Top - neighbor.Margin.Top;
+            int top = neighbor.Top + (neighbor.Height - label.Height) / 2;
+            int margin = Math.Max(0, top - rowTop);
+            if (label.Margin.Top != margin)
+                label.Margin = new Padding(label.Margin.Left, margin, label.Margin.Right, label.Margin.Bottom);
+        }
+
+        /// <summary>Scales a 96-DPI design-unit length to this form's DPI for
+        /// runtime layout arithmetic — the code equivalent of what WinForms
+        /// does to designer coordinates.</summary>
+        private int ScaleDpi(int value) => (int)Math.Round(value * DeviceDpi / 96f);
 
         /// <summary>Shows the current window width (helper for layout tuning).</summary>
         private void btnShowWindowWidth_Click(object sender, EventArgs e)

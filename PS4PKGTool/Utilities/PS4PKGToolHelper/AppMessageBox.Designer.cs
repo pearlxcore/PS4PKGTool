@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace PS4PKGTool.Utilities.PS4PKGToolHelper
@@ -98,7 +98,8 @@ namespace PS4PKGTool.Utilities.PS4PKGToolHelper
             //
             // AppMessageBox
             //
-            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new Size(460, 150);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnNo);

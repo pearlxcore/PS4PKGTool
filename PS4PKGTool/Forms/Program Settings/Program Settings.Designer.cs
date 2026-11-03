@@ -293,13 +293,15 @@ namespace PS4PKGTool
             grpPkgExtraction.Name = "grpPkgExtraction";
             grpPkgExtraction.Padding = new System.Windows.Forms.Padding(12);
             grpPkgExtraction.SectionHeader = "PKG Extraction";
-            grpPkgExtraction.Size = new System.Drawing.Size(597, 128);
+            // 140: two-line description (DPI label fitting), the temp row and
+            // the ignore-check checkbox, with bottom padding.
+            grpPkgExtraction.Size = new System.Drawing.Size(597, 140);
             grpPkgExtraction.TabIndex = 2;
             // 
             // btnUseDefaultOrbisTempDirectory
             // 
             btnUseDefaultOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
-            btnUseDefaultOrbisTempDirectory.Location = new System.Drawing.Point(509, 59);
+            btnUseDefaultOrbisTempDirectory.Location = new System.Drawing.Point(509, 75);
             btnUseDefaultOrbisTempDirectory.Name = "btnUseDefaultOrbisTempDirectory";
             btnUseDefaultOrbisTempDirectory.Size = new System.Drawing.Size(75, 26);
             btnUseDefaultOrbisTempDirectory.TabIndex = 3;
@@ -309,7 +311,7 @@ namespace PS4PKGTool
             // btnBrowseOrbisTempDirectory
             // 
             btnBrowseOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
-            btnBrowseOrbisTempDirectory.Location = new System.Drawing.Point(426, 59);
+            btnBrowseOrbisTempDirectory.Location = new System.Drawing.Point(426, 75);
             btnBrowseOrbisTempDirectory.Name = "btnBrowseOrbisTempDirectory";
             btnBrowseOrbisTempDirectory.Size = new System.Drawing.Size(75, 26);
             btnBrowseOrbisTempDirectory.TabIndex = 2;
@@ -318,7 +320,7 @@ namespace PS4PKGTool
             // 
             // tbOrbisTempDirectory
             // 
-            tbOrbisTempDirectory.Location = new System.Drawing.Point(13, 61);
+            tbOrbisTempDirectory.Location = new System.Drawing.Point(13, 77);
             tbOrbisTempDirectory.Name = "tbOrbisTempDirectory";
             tbOrbisTempDirectory.Size = new System.Drawing.Size(405, 23);
             tbOrbisTempDirectory.TabIndex = 1;
@@ -328,14 +330,15 @@ namespace PS4PKGTool
             lblOrbisTempDirectory.Font = new System.Drawing.Font("Segoe UI", 9F);
             lblOrbisTempDirectory.Location = new System.Drawing.Point(13, 37);
             lblOrbisTempDirectory.Name = "lblOrbisTempDirectory";
-            lblOrbisTempDirectory.Size = new System.Drawing.Size(570, 20);
+            // Two lines: DarkLabel grows to fit the description at high DPI.
+            lblOrbisTempDirectory.Size = new System.Drawing.Size(570, 36);
             lblOrbisTempDirectory.TabIndex = 0;
             lblOrbisTempDirectory.Text = "Temporary directory for PKG preview and extraction staging. Leave blank to use the Windows temporary directory.";
             // 
             // cbIgnoreDiskSpace
             // 
             cbIgnoreDiskSpace.AutoSize = true;
-            cbIgnoreDiskSpace.Location = new System.Drawing.Point(13, 92);
+            cbIgnoreDiskSpace.Location = new System.Drawing.Point(13, 106);
             cbIgnoreDiskSpace.Name = "cbIgnoreDiskSpace";
             cbIgnoreDiskSpace.Size = new System.Drawing.Size(300, 19);
             cbIgnoreDiskSpace.TabIndex = 4;
@@ -371,7 +374,7 @@ namespace PS4PKGTool
             // 
             darkLabel13.Location = new System.Drawing.Point(198, 73);
             darkLabel13.Name = "darkLabel13";
-            darkLabel13.Size = new System.Drawing.Size(72, 15);
+            darkLabel13.Size = new System.Drawing.Size(77, 15);
             darkLabel13.TabIndex = 15;
             darkLabel13.Text = "Background";
             // 
@@ -379,7 +382,8 @@ namespace PS4PKGTool
             // 
             darkLabel7.Location = new System.Drawing.Point(106, 73);
             darkLabel7.Name = "darkLabel7";
-            darkLabel7.Size = new System.Drawing.Size(60, 15);
+            // Widened: "Text Color" clipped at high DPI (snug design width).
+            darkLabel7.Size = new System.Drawing.Size(75, 15);
             darkLabel7.TabIndex = 14;
             darkLabel7.Text = "Text Color";
             // 
@@ -763,7 +767,7 @@ namespace PS4PKGTool
             darkLabelShadps4Os.Font = new System.Drawing.Font("Segoe UI", 9F);
             darkLabelShadps4Os.Location = new System.Drawing.Point(13, 72);
             darkLabelShadps4Os.Name = "darkLabelShadps4Os";
-            darkLabelShadps4Os.Size = new System.Drawing.Size(132, 15);
+            darkLabelShadps4Os.Size = new System.Drawing.Size(137, 15);
             darkLabelShadps4Os.TabIndex = 4;
             darkLabelShadps4Os.Text = "Compatibility platform:";
             // 
@@ -1186,7 +1190,7 @@ namespace PS4PKGTool
             btnSaveClose.Name = "btnSaveClose";
             btnSaveClose.Size = new System.Drawing.Size(146, 25);
             btnSaveClose.TabIndex = 1;
-            btnSaveClose.Text = "Save & Close";
+            btnSaveClose.Text = "Save && Close";
             btnSaveClose.Click += btnSaveClose_Click;
             // 
             // darkSidebarTabControl1
@@ -1219,7 +1223,7 @@ namespace PS4PKGTool
             grpShellIntegration.Controls.Add(btnShellInstall);
             grpShellIntegration.Controls.Add(lblShellIntegrationStatus);
             grpShellIntegration.Controls.Add(lblShellIntegrationTitle);
-            grpShellIntegration.Location = new System.Drawing.Point(12, 336);
+            grpShellIntegration.Location = new System.Drawing.Point(12, 348);
             grpShellIntegration.Margin = new System.Windows.Forms.Padding(6);
             grpShellIntegration.Name = "grpShellIntegration";
             grpShellIntegration.Padding = new System.Windows.Forms.Padding(12);
@@ -1261,7 +1265,9 @@ namespace PS4PKGTool
             lblShellIntegrationTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
             lblShellIntegrationTitle.Location = new System.Drawing.Point(13, 43);
             lblShellIntegrationTitle.Name = "lblShellIntegrationTitle";
-            lblShellIntegrationTitle.Size = new System.Drawing.Size(280, 18);
+            // 350 (was 280): the sentence wraps to two lines at 280 and its
+            // second line ran into the status label below; one line fits here.
+            lblShellIntegrationTitle.Size = new System.Drawing.Size(350, 18);
             lblShellIntegrationTitle.TabIndex = 0;
             lblShellIntegrationTitle.Text = "Adds PS4 PKG Tool actions to the right-click menu for .pkg files.";
             // 
@@ -1410,8 +1416,8 @@ namespace PS4PKGTool
             // 
             // ProgramSetting
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(767, 736);
             Controls.Add(darkSidebarTabControl1);
             Controls.Add(darkFooterBar1);

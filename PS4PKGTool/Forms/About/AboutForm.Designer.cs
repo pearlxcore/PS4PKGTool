@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace PS4PKGTool
@@ -126,7 +126,8 @@ namespace PS4PKGTool
             //
             // AboutForm
             //
-            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new Size(400, 250);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnBug);

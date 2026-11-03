@@ -1,4 +1,4 @@
-﻿using DarkUI.Config;
+using DarkUI.Config;
 using PS4PKGTool.Core.Diagnostics;
 using PS4PKGTool.Shell;
 using PS4PKGTool.Startup;
@@ -23,6 +23,12 @@ namespace PS4PKGTool
         [STAThread]
         static void Main(string[] args)
         {
+            // Per-monitor v2 DPI awareness, before any window is created:
+            // without it Windows renders at 96 DPI and bitmap-stretches the
+            // app onto scaled displays (4K @ 200%), making all text blurry.
+            // The app.manifest requests the same mode at the OS level; if
+            // that already applied it, this call is a harmless no-op.
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

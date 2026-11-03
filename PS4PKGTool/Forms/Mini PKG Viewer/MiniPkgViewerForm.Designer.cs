@@ -1,4 +1,4 @@
-namespace PS4PKGTool
+﻿namespace PS4PKGTool
 {
     partial class MiniPkgViewerForm
     {
@@ -1764,8 +1764,8 @@ namespace PS4PKGTool
             // 
             // MiniPkgViewerForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(1004, 600);
             Controls.Add(tabsViewer);
             Controls.Add(headerPanel);
