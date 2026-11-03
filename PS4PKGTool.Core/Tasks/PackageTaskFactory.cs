@@ -60,7 +60,7 @@ public sealed class PackageTaskFactory(IPackageExtractionService? extractionServ
             var progress = new Progress<PkgMergeProgress>(p => queued.Report(new QueueTaskProgress(p.Stage, p.Step, p.TotalSteps, p.CurrentBytes, p.TotalBytes, p.CurrentItem + 1, p.TotalItems, p.CurrentFile)));
             var result = await Task.Run(() => new PkgMergeService().Merge(request with { Progress = progress, CancellationToken = ct }), ct).ConfigureAwait(false);
             return new QueueTaskExecutionResult(true, "Merged PKG created.", result.OutputPkgPath);
-        }, JsonSerializer.Serialize(new MergeTaskPayload(request.BasePkgPath, request.UpdatePkgPath, request.OutputPkgPath, null, null, request.ValidateAfterBuild, request.PfscMode, request.WorkerCount, request.WorkDirectory, request.KeepWorkDirectory, request.CleanupWorkDirectoryOnFailure, request.Title, request.TitleId, request.ContentId)), id); if (saved is not null) task.RestoreState(saved); return task;
+        }, JsonSerializer.Serialize(new MergeTaskPayload(request.BasePkgPath, request.UpdatePkgPath, request.OutputPkgPath, null, null, request.ValidateAfterBuild, request.PfscMode, request.WorkerCount, request.WorkDirectory, request.KeepWorkDirectory, request.CleanupWorkDirectoryOnFailure, request.Title, request.TitleId, request.ContentId, request.SkipDiskSpaceCheck)), id); if (saved is not null) task.RestoreState(saved); return task;
     }
 
     public QueuedPackageTask CreateFfpfsc(FfpfscConvertOptions options, string displayName, Guid? id = null, PersistedQueueTask? saved = null)
@@ -82,5 +82,5 @@ public sealed class PackageTaskFactory(IPackageExtractionService? extractionServ
         public string OutputDirectory { get; init; } = string.Empty;
         public ExtractLayout Layout { get; init; } = ExtractLayout.Merged;
     }
-    private sealed record MergeTaskPayload(string BasePkgPath, string UpdatePkgPath, string? OutputPkgPath, string? BasePasscode, string? UpdatePasscode, bool ValidateAfterBuild, PfscMode PfscMode, int WorkerCount, string? WorkDirectory, bool KeepWorkDirectory, bool CleanupWorkDirectoryOnFailure, string? Title, string? TitleId, string? ContentId);
+    private sealed record MergeTaskPayload(string BasePkgPath, string UpdatePkgPath, string? OutputPkgPath, string? BasePasscode, string? UpdatePasscode, bool ValidateAfterBuild, PfscMode PfscMode, int WorkerCount, string? WorkDirectory, bool KeepWorkDirectory, bool CleanupWorkDirectoryOnFailure, string? Title, string? TitleId, string? ContentId, bool SkipDiskSpaceCheck);
 }

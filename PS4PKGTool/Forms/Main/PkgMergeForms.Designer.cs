@@ -22,6 +22,7 @@ namespace PS4PKGTool
         private DarkUI.Controls.DarkTextBox _outputPath;
         private DarkUI.Controls.DarkTextBox _workParent;
         private DarkUI.Controls.DarkCheckBox _validate;
+        private DarkUI.Controls.DarkCheckBox _ignoreDiskSpace;
         private DarkUI.Controls.DarkNumericUpDown _workers;
         private DarkUI.Controls.DarkButton btnBrowseOutput;
         private DarkUI.Controls.DarkButton btnBrowseWork;
@@ -54,6 +55,7 @@ namespace PS4PKGTool
             btnBrowseWork = new DarkUI.Controls.DarkButton();
             optionsPanel = new System.Windows.Forms.FlowLayoutPanel();
             _validate = new DarkUI.Controls.DarkCheckBox();
+            _ignoreDiskSpace = new DarkUI.Controls.DarkCheckBox();
             lblWorkers = new DarkUI.Controls.DarkLabel();
             _workers = new DarkUI.Controls.DarkNumericUpDown();
             lblSpaceWarning = new DarkUI.Controls.DarkLabel();
@@ -243,6 +245,7 @@ namespace PS4PKGTool
             // 
             layout.SetColumnSpan(optionsPanel, 2);
             optionsPanel.Controls.Add(_validate);
+            optionsPanel.Controls.Add(_ignoreDiskSpace);
             optionsPanel.Controls.Add(lblWorkers);
             optionsPanel.Controls.Add(_workers);
             optionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -262,6 +265,16 @@ namespace PS4PKGTool
             _validate.Size = new System.Drawing.Size(192, 19);
             _validate.TabIndex = 0;
             _validate.Text = "Validate merged PKG after build";
+            // 
+            // _ignoreDiskSpace
+            // 
+            _ignoreDiskSpace.AutoSize = true;
+            _ignoreDiskSpace.Location = new System.Drawing.Point(200, 3);
+            _ignoreDiskSpace.Margin = new System.Windows.Forms.Padding(8, 3, 3, 3);
+            _ignoreDiskSpace.Name = "_ignoreDiskSpace";
+            _ignoreDiskSpace.Size = new System.Drawing.Size(160, 19);
+            _ignoreDiskSpace.TabIndex = 1;
+            _ignoreDiskSpace.Text = "Ignore disk-space check";
             // 
             // lblWorkers
             // 

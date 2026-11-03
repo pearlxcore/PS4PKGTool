@@ -7105,6 +7105,7 @@ namespace PS4PKGTool
                 WorkDirectory = options.WorkParentDirectory,
                 ValidateAfterBuild = options.ValidateAfterBuild,
                 WorkerCount = options.WorkerCount,
+                SkipDiskSpaceCheck = options.IgnoreDiskSpaceCheck,
                 PfscMode = OrbisPkgTool.Pkg.PfscMode.Compressed,
                 CleanupWorkDirectoryOnFailure = true
             };

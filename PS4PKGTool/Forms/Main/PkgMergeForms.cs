@@ -8,7 +8,7 @@ namespace PS4PKGTool
     internal sealed record PkgMergePackage(string Path, string Title, string TitleId, string Version, string Category);
 
     internal sealed record PkgMergeOptions(string OutputPath, string WorkParentDirectory,
-        bool ValidateAfterBuild, int WorkerCount);
+        bool ValidateAfterBuild, int WorkerCount, bool IgnoreDiskSpaceCheck);
 
     internal sealed partial class PkgMergeOptionsForm : DarkForm
     {
@@ -152,7 +152,7 @@ namespace PS4PKGTool
                 return;
             }
 
-            Options = new PkgMergeOptions(output, workParent, _validate.Checked, (int)_workers.Value);
+            Options = new PkgMergeOptions(output, workParent, _validate.Checked, (int)_workers.Value, _ignoreDiskSpace.Checked);
             DialogResult = DialogResult.OK;
             Close();
         }
