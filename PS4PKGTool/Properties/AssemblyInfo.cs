@@ -22,9 +22,9 @@ using System.Runtime.InteropServices;
 //     filtered out and the app will claim it is up to date.
 //   * NEVER publish as a draft because drafts are invisible to the API.
 // ──────────────────────────────────────────────────────────────
-[assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyFileVersion("1.9.0.0")]
-[assembly: AssemblyInformationalVersion("1.9.0")]
+[assembly: AssemblyVersion("1.9.1.0")]
+[assembly: AssemblyFileVersion("1.9.1.0")]
+[assembly: AssemblyInformationalVersion("1.9.1")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
