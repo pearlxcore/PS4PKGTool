@@ -54,10 +54,10 @@
     <Copyright>Copyright © pearlxcore</Copyright>
     <!-- Note: GenerateAssemblyInfo=false, so these are not used at build time.
          The real version attributes live in Properties/AssemblyInfo.cs — keep them in sync. -->
-    <AssemblyVersion>1.9.0.0</AssemblyVersion>
+    <AssemblyVersion>1.9.2.0</AssemblyVersion>
     <StartupObject>PS4PKGTool.Program</StartupObject>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <FileVersion>1.9.0.0</FileVersion>
+    <FileVersion>1.9.2.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Utilities\PkgInspection\PkgExtractionService.cs" />

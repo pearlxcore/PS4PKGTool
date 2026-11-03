@@ -8,7 +8,7 @@ namespace PS4PKGTool
     internal sealed record PkgMergePackage(string Path, string Title, string TitleId, string Version, string Category);
 
     internal sealed record PkgMergeOptions(string OutputPath, string WorkParentDirectory,
-        bool ValidateAfterBuild, int WorkerCount);
+        bool ValidateAfterBuild, int WorkerCount, bool IgnoreDiskSpaceCheck);
 
     internal sealed partial class PkgMergeOptionsForm : DarkForm
     {
@@ -26,7 +26,9 @@ namespace PS4PKGTool
             txtTitleId.Text = basePkg.TitleId;
             txtVersions.Text = $"Base: {basePkg.Version}    Update: {patchPkg.Version}";
             _outputPath.Text = "";
-            _workParent.Text = Path.GetTempPath();
+            _workParent.Text = DefaultWorkParent();
+            _ignoreDiskSpace.Checked =
+                PS4PKGTool.Utilities.Settings.SettingsManager.appSettings_?.IgnoreDiskSpaceCheck == true;
 
             _basePkgSize = GetFileSize(basePkg.Path);
             _patchPkgSize = GetFileSize(patchPkg.Path);
@@ -39,6 +41,13 @@ namespace PS4PKGTool
             catch { return 0; }
         }
 
+        /// <summary>
+        /// Prefer the configured PKG extraction temp directory so the Settings
+        /// override also drives the merge's extraction dumps and build temp.
+        /// </summary>
+        private static string DefaultWorkParent()
+            => PS4PKGTool.Utilities.PS4PKGToolHelper.Helper.ResolveTempRoot();
+
         private void UpdateSpaceWarning(object? sender, EventArgs e)
         {
             try
@@ -50,14 +59,18 @@ namespace PS4PKGTool
                     return;
                 }
 
-                // Match the OrbisPkgTool build guard: peak temp requirement is
-                // estInner * TempDiskMultiplier + estInner / 4 (3.45x). We don't
-                // have the extracted inner-PFS size at dialog time, so we proxy
-                // it with the combined PKG sizes. Kept in sync with
-                // PfsFormat.TempDiskMultiplier in OrbisPkgTool.
+                // The work drive holds BOTH the extracted dumps and the
+                // builder's streaming temp (inner.pfs + inner.pfsc + outer.pfs).
+                // The build peak is ~3.45x the inner PFS, plus the merged dump
+                // (~1x) already on the work drive. estInner is proxied with the
+                // combined PKG sizes; the builder re-checks the real packaged
+                // sizes and aborts with the exact numbers before writing.
+                // Kept in sync with PfsFormat.TempDiskMultiplier.
                 const double TempDiskMultiplier = 3.2;
                 long estInner = _basePkgSize + _patchPkgSize;
-                long needed = (long)(estInner * TempDiskMultiplier) + estInner / 4;
+                long buildTemp = (long)(estInner * TempDiskMultiplier) + estInner / 4;
+                long output = estInner / 4 + estInner;
+                long needed = buildTemp + output;
                 long free = PS4PKGTool.Utilities.PS4PKGToolHelper.DiskSpaceHelper.GetAvailableFreeSpace(work);
                 if (free < 0)
                 {
@@ -141,7 +154,7 @@ namespace PS4PKGTool
                 return;
             }
 
-            Options = new PkgMergeOptions(output, workParent, _validate.Checked, (int)_workers.Value);
+            Options = new PkgMergeOptions(output, workParent, _validate.Checked, (int)_workers.Value, _ignoreDiskSpace.Checked);
             DialogResult = DialogResult.OK;
             Close();
         }

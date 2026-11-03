@@ -407,6 +407,7 @@ namespace PS4PKGTool
                 _tbLogBox.AppendText(batch.ToString());
                 if (_tbLogBox.Text.Length > 50000)
                     _tbLogBox.Text = _tbLogBox.Text.Substring(_tbLogBox.Text.Length - 40000);
+                _tbLogBox.RefreshScrollBars();
             }
             catch { /* best-effort: textbox can disappear while the form closes */ }
         }
@@ -7224,6 +7225,7 @@ namespace PS4PKGTool
                 WorkDirectory = options.WorkParentDirectory,
                 ValidateAfterBuild = options.ValidateAfterBuild,
                 WorkerCount = options.WorkerCount,
+                SkipDiskSpaceCheck = options.IgnoreDiskSpaceCheck,
                 PfscMode = OrbisPkgTool.Pkg.PfscMode.Compressed,
                 CleanupWorkDirectoryOnFailure = true
             };

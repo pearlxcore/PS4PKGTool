@@ -97,6 +97,7 @@ namespace PS4PKGTool.Utilities.Settings
                     writer.WriteLine($"shadps4_managed_root={AsSingleLine(settings.Shadps4ManagedRoot)}");
                     writer.WriteLine($"shadps4_install_directory={AsSingleLine(settings.Shadps4InstallDirectory)}");
                     writer.WriteLine($"orbis_temp_directory={AsSingleLine(settings.OrbisTempDirectory)}");
+                    writer.WriteLine($"ignore_disk_space_check={settings.IgnoreDiskSpaceCheck}");
                     writer.WriteLine($"shadps4_config_detection_dismissed={settings.Shadps4ConfigDetectionDismissed}");
                     writer.WriteLine($"shell_integration_installed={settings.ShellIntegrationInstalled}");
                 }
@@ -367,6 +368,11 @@ namespace PS4PKGTool.Utilities.Settings
                             {
                                 appSettings_.OrbisTempDirectory = line.Substring("orbis_temp_directory=".Length).Trim();
                                 loadedGlobalOrbisTemp = true;
+                            }
+                            else if (line.StartsWith("ignore_disk_space_check="))
+                            {
+                                bool.TryParse(line.Substring("ignore_disk_space_check=".Length).Trim(), out bool ignoreDiskSpaceCheck);
+                                appSettings_.IgnoreDiskSpaceCheck = ignoreDiskSpaceCheck;
                             }
                             // Migration from the short-lived shadPS4-only setting.
                             else if (line.StartsWith("shadps4_orbis_temp_directory=")

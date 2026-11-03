@@ -69,6 +69,29 @@ namespace PS4PKGTool.Utilities.PS4PKGToolHelper
             "PS4PKGTool") + Path.DirectorySeparatorChar;
 
         /// <summary>
+        /// Resolves the configured PKG temporary directory (Settings &gt;
+        /// General &gt; PKG Extraction Temp Directory), falling back to the
+        /// Windows temporary directory when it is unset or unusable.
+        /// </summary>
+        public static string ResolveTempRoot()
+        {
+            string configuredRoot = PS4PKGTool.Utilities.Settings.SettingsManager.appSettings_?.OrbisTempDirectory;
+            if (string.IsNullOrWhiteSpace(configuredRoot))
+                return Path.GetTempPath();
+            try
+            {
+                string root = Path.GetFullPath(configuredRoot);
+                Directory.CreateDirectory(root);
+                return root;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("Configured PKG temporary directory is unavailable. Using the Windows temporary directory: " + ex.Message);
+                return Path.GetTempPath();
+            }
+        }
+
+        /// <summary>
         /// Creates a short ASCII temp directory for working files.
         /// The system temp root plus a short name keeps paths under MAX_PATH even for
         /// games with deep internal structures (e.g. Ultrawings' StreamingAssets schemas).
@@ -76,23 +99,8 @@ namespace PS4PKGTool.Utilities.PS4PKGToolHelper
         /// </summary>
         public static string CreateOrbisTempDir(string tag)
         {
-            string root = Path.GetTempPath();
-            string configuredRoot = PS4PKGTool.Utilities.Settings.SettingsManager.appSettings_?.OrbisTempDirectory;
-            if (!string.IsNullOrWhiteSpace(configuredRoot))
-            {
-                try
-                {
-                    root = Path.GetFullPath(configuredRoot);
-                    Directory.CreateDirectory(root);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogWarning("Configured PKG temporary directory is unavailable. Using the Windows temporary directory: " + ex.Message);
-                    root = Path.GetTempPath();
-                }
-            }
-
-            string dir = Path.Combine(root, "p4t_" + tag + "_" + Guid.NewGuid().ToString("N").Substring(0, 6));
+            string dir = Path.Combine(
+                ResolveTempRoot(), "p4t_" + tag + "_" + Guid.NewGuid().ToString("N").Substring(0, 6));
             Directory.CreateDirectory(dir);
             return dir;
         }

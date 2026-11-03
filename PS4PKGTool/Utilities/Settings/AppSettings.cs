@@ -80,11 +80,17 @@ namespace PS4PKGTool.Utilities.Settings
         /// </summary>
         public string Shadps4InstallDirectory { get; set; } = "";
         /// <summary>
-        /// Optional directory passed to orbis-pub-cmd as --tmp_path for every
-        /// PKG extraction. Empty leaves orbis-pub-cmd on its Windows %TEMP%
-        /// default.
+        /// Root for PS4PKGTool working files: PKG preview/drag-out staging,
+        /// merge/FFPFSC default work folder and trophy scratch. Empty uses the
+        /// Windows temporary directory. Full PKG extraction writes straight to
+        /// the chosen output folder.
         /// </summary>
         public string OrbisTempDirectory { get; set; } = "";
+        /// <summary>
+        /// When true, merge builds skip the pre-flight disk-space guard.
+        /// The merge dialog can override this per merge.
+        /// </summary>
+        public bool IgnoreDiskSpaceCheck { get; set; } = false;
         /// <summary>Legacy (superseded by Shadps4ExecutablePath - kept for migration).</summary>
         public string Shadps4CoreExePath { get; set; } = "";
         /// <summary>Legacy (superseded by Shadps4ExecutablePath - kept for migration).</summary>

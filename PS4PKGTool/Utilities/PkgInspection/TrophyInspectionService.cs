@@ -204,7 +204,7 @@ namespace PS4PKGTool.Utilities.PkgInspection
                 new SharedTrophyMetadataReader(),
                 new CachedNpCommunicationIdProvider(),
                 new DetachedTrophyImageDecoder(),
-                Path.Combine(Path.GetTempPath(), "PS4PKGTool", "MiniPkgViewerTrophy"))
+                Path.Combine(Helper.ResolveTempRoot(), "PS4PKGTool", "MiniPkgViewerTrophy"))
         {
         }
 

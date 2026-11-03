@@ -43,6 +43,7 @@ namespace PS4PKGTool
             // Bridge UI-free Core diagnostics into the app's Logger.
             CoreLog.Information = Logger.LogInformation;
             CoreLog.Warning = Logger.LogWarning;
+            CoreLog.Error = msg => Logger.LogError(msg);
 
             appSettings_ = LoadSettings(SettingFilePath);
 

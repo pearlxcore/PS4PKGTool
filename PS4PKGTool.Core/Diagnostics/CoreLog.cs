@@ -10,8 +10,11 @@ public static class CoreLog
 {
     public static Action<string>? Information { get; set; }
     public static Action<string>? Warning { get; set; }
+    public static Action<string>? Error { get; set; }
 
     public static void Info(string message) => Information?.Invoke(message);
 
     public static void Warn(string message) => Warning?.Invoke(message);
+
+    public static void Err(string message) => Error?.Invoke(message);
 }

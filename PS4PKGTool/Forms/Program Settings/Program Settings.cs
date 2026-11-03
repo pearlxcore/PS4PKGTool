@@ -106,6 +106,7 @@ namespace PS4PKGTool
             darkCheckBoxRecursive.Checked = appSettings_.ScanRecursive;
             lbPkgDirectoryList.Items.AddRange(appSettings_.PkgDirectories?.Cast<string>().ToArray() ?? Array.Empty<string>());
             tbOrbisTempDirectory.Text = appSettings_.OrbisTempDirectory;
+            cbIgnoreDiskSpace.Checked = appSettings_.IgnoreDiskSpaceCheck;
 
             AutoSortRow.Checked = appSettings_.AutoSortRow;
             PKGColorLabeling.Checked = appSettings_.PkgColorLabel;
@@ -216,6 +217,7 @@ namespace PS4PKGTool
 
             appSettings_.RenameCustomName = tbCustomNamePattern.Text;
             appSettings_.OrbisTempDirectory = tbOrbisTempDirectory.Text.Trim();
+            appSettings_.IgnoreDiskSpaceCheck = cbIgnoreDiskSpace.Checked;
             appSettings_.pkgtitleIdColumn = TitleId.Checked;
             appSettings_.pkgcontentIdColumn = ContentId.Checked;
             appSettings_.pkgregionColumn = Region.Checked;
