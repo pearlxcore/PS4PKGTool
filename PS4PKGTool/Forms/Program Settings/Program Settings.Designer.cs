@@ -25,6 +25,7 @@ namespace PS4PKGTool
             btnBrowseOrbisTempDirectory = new DarkUI.Controls.DarkButton();
             tbOrbisTempDirectory = new DarkUI.Controls.DarkTextBox();
             lblOrbisTempDirectory = new DarkUI.Controls.DarkLabel();
+            cbIgnoreDiskSpace = new DarkUI.Controls.DarkCheckBox();
             grpColors = new DarkUI.Controls.DarkSectionPanel();
             darkLabel13 = new DarkUI.Controls.DarkLabel();
             darkLabel7 = new DarkUI.Controls.DarkLabel();
@@ -286,12 +287,13 @@ namespace PS4PKGTool
             grpPkgExtraction.Controls.Add(btnBrowseOrbisTempDirectory);
             grpPkgExtraction.Controls.Add(tbOrbisTempDirectory);
             grpPkgExtraction.Controls.Add(lblOrbisTempDirectory);
+            grpPkgExtraction.Controls.Add(cbIgnoreDiskSpace);
             grpPkgExtraction.Location = new System.Drawing.Point(12, 196);
             grpPkgExtraction.Margin = new System.Windows.Forms.Padding(6);
             grpPkgExtraction.Name = "grpPkgExtraction";
             grpPkgExtraction.Padding = new System.Windows.Forms.Padding(12);
             grpPkgExtraction.SectionHeader = "PKG Extraction";
-            grpPkgExtraction.Size = new System.Drawing.Size(597, 98);
+            grpPkgExtraction.Size = new System.Drawing.Size(597, 128);
             grpPkgExtraction.TabIndex = 2;
             // 
             // btnUseDefaultOrbisTempDirectory
@@ -329,6 +331,15 @@ namespace PS4PKGTool
             lblOrbisTempDirectory.Size = new System.Drawing.Size(570, 20);
             lblOrbisTempDirectory.TabIndex = 0;
             lblOrbisTempDirectory.Text = "Temporary directory for PKG preview and extraction staging. Leave blank to use the Windows temporary directory.";
+            // 
+            // cbIgnoreDiskSpace
+            // 
+            cbIgnoreDiskSpace.AutoSize = true;
+            cbIgnoreDiskSpace.Location = new System.Drawing.Point(13, 92);
+            cbIgnoreDiskSpace.Name = "cbIgnoreDiskSpace";
+            cbIgnoreDiskSpace.Size = new System.Drawing.Size(300, 19);
+            cbIgnoreDiskSpace.TabIndex = 4;
+            cbIgnoreDiskSpace.Text = "Ignore the disk-space check when merging (continue anyway)";
             // 
             // grpColors
             // 
@@ -1208,7 +1219,7 @@ namespace PS4PKGTool
             grpShellIntegration.Controls.Add(btnShellInstall);
             grpShellIntegration.Controls.Add(lblShellIntegrationStatus);
             grpShellIntegration.Controls.Add(lblShellIntegrationTitle);
-            grpShellIntegration.Location = new System.Drawing.Point(12, 306);
+            grpShellIntegration.Location = new System.Drawing.Point(12, 336);
             grpShellIntegration.Margin = new System.Windows.Forms.Padding(6);
             grpShellIntegration.Name = "grpShellIntegration";
             grpShellIntegration.Padding = new System.Windows.Forms.Padding(12);
@@ -1483,6 +1494,7 @@ namespace PS4PKGTool
         private DarkUI.Controls.DarkButton btnPingPs4, btnInstallNodejs, btnInstalleServerModule;
         private DarkUI.Controls.DarkSectionPanel grpRename;
         private DarkUI.Controls.DarkLabel lblOrbisTempDirectory;
+        private DarkUI.Controls.DarkCheckBox cbIgnoreDiskSpace;
         private DarkUI.Controls.DarkTextBox tbOrbisTempDirectory;
         private DarkUI.Controls.DarkButton btnBrowseOrbisTempDirectory, btnUseDefaultOrbisTempDirectory;
         private DarkUI.Controls.DarkLabel darkLabel12, darkLabelPlaceholderHint, darkLabelNamingPatternExample;

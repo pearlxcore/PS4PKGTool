@@ -374,7 +374,6 @@ namespace PS4PKGTool
             _taskRetry = new DarkUI.Controls.DarkButton();
             _taskOpenOutput = new DarkUI.Controls.DarkButton();
             _taskRemove = new DarkUI.Controls.DarkButton();
-            _taskIgnoreDisk = new DarkUI.Controls.DarkButton();
             tasksToolbar = new DarkUI.Controls.DarkFooterBar();
             _taskAutoStart = new DarkUI.Controls.DarkCheckBox();
             _taskStartNext = new DarkUI.Controls.DarkButton();
@@ -3555,7 +3554,6 @@ namespace PS4PKGTool
             taskActionsPanel.Controls.Add(_taskRetry);
             taskActionsPanel.Controls.Add(_taskOpenOutput);
             taskActionsPanel.Controls.Add(_taskRemove);
-            taskActionsPanel.Controls.Add(_taskIgnoreDisk);
             taskActionsPanel.Dock = DockStyle.Fill;
             taskActionsPanel.Location = new System.Drawing.Point(0, 196);
             taskActionsPanel.Margin = new Padding(0, 12, 0, 0);
@@ -3599,16 +3597,6 @@ namespace PS4PKGTool
             _taskRemove.TabIndex = 3;
             _taskRemove.Text = "Remove";
             _taskRemove.Click += taskRemove_Click;
-            // 
-            // _taskIgnoreDisk
-            // 
-            _taskIgnoreDisk.Location = new System.Drawing.Point(429, 5);
-            _taskIgnoreDisk.Name = "_taskIgnoreDisk";
-            _taskIgnoreDisk.Size = new System.Drawing.Size(150, 26);
-            _taskIgnoreDisk.TabIndex = 4;
-            _taskIgnoreDisk.Text = "Ignore && continue";
-            _taskIgnoreDisk.Visible = false;
-            _taskIgnoreDisk.Click += taskIgnoreDisk_Click;
             // 
             // tasksToolbar
             // 
@@ -4378,7 +4366,6 @@ namespace PS4PKGTool
         private DarkUI.Controls.DarkButton _taskRetry;
         private DarkUI.Controls.DarkButton _taskOpenOutput;
         private DarkUI.Controls.DarkButton _taskRemove;
-        private DarkUI.Controls.DarkButton _taskIgnoreDisk;
         private System.Windows.Forms.Timer taskRefreshTimer;
         private DarkUI.Controls.DarkTabPage tabPage1;
         private DarkUI.Controls.DarkTabPage tabPage2;

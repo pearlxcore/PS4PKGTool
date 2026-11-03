@@ -127,39 +127,6 @@ public partial class Main
     private void taskRemove_Click(object? sender, EventArgs e) { if (SelectedTask is { } task) _taskQueue.Remove(task); }
     private void taskOpenOutput_Click(object? sender, EventArgs e) => OpenSelectedTaskOutput();
 
-    /// <summary>True when the selected task failed on the build's disk-space pre-flight.</summary>
-    private static bool CanIgnoreDiskSpaceCheck(QueuedPackageTask task)
-        => task.Status == QueueTaskStatus.Failed
-            && task.Type == "Merge PKG"
-            && task.Message.Contains("Aborting before build", StringComparison.OrdinalIgnoreCase);
-
-    /// <summary>
-    /// Re-runs the failed merge with the disk-space guard disabled. The failed
-    /// task is kept for history; the new task carries the flag (and persists it
-    /// in the queue payload), so a later restore keeps the same choice.
-    /// </summary>
-    private void taskIgnoreDisk_Click(object? sender, EventArgs e)
-    {
-        if (SelectedTask is not { } task || !CanIgnoreDiskSpaceCheck(task)) return;
-        if (string.IsNullOrWhiteSpace(task.PersistencePayload)) return;
-
-        MergeQueuePayload? payload;
-        try { payload = JsonSerializer.Deserialize<MergeQueuePayload>(task.PersistencePayload); }
-        catch (JsonException) { return; }
-        if (payload is null) return;
-
-        var request = new PkgMergeRequest
-        {
-            BasePkgPath = payload.BasePkgPath, UpdatePkgPath = payload.UpdatePkgPath, OutputPkgPath = payload.OutputPkgPath,
-            BasePasscode = payload.BasePasscode, UpdatePasscode = payload.UpdatePasscode, ValidateAfterBuild = payload.ValidateAfterBuild,
-            PfscMode = payload.PfscMode, WorkerCount = payload.WorkerCount, WorkDirectory = payload.WorkDirectory,
-            KeepWorkDirectory = payload.KeepWorkDirectory, CleanupWorkDirectoryOnFailure = payload.CleanupWorkDirectoryOnFailure,
-            Title = payload.Title, TitleId = payload.TitleId, ContentId = payload.ContentId,
-            SkipDiskSpaceCheck = true
-        };
-        EnqueueMerge(request, task.DisplayName + " (ignore disk check)");
-    }
-
     private void RefreshTaskGrid()
     {
         if (_tasksGrid is null) return;
@@ -314,7 +281,7 @@ public partial class Main
 
     private void UpdateSelectedTaskDetails()
     {
-        if (_taskStageLabel is null || _taskOverallProgress is null || _taskCurrentProgress is null || _taskProgressLabel is null || _taskDetailLabel is null || _taskIgnoreDisk is null) return;
+        if (_taskStageLabel is null || _taskOverallProgress is null || _taskCurrentProgress is null || _taskProgressLabel is null || _taskDetailLabel is null) return;
         QueuedPackageTask? task = SelectedTask;
         if (task is null)
         {
@@ -325,8 +292,6 @@ public partial class Main
             _taskDetailLabel.Text = "";
             SetProgressValue(_taskOverallProgress, 0);
             SetProgressValue(_taskCurrentProgress, 0);
-            _taskIgnoreDisk.Visible = false;
-            _taskIgnoreDisk.Enabled = false;
             return;
         }
         QueueTaskProgress p = task.Progress;
@@ -350,9 +315,6 @@ public partial class Main
         _taskRetry!.Enabled = task.Status is QueueTaskStatus.Failed or QueueTaskStatus.Cancelled or QueueTaskStatus.Interrupted;
         _taskRemove!.Enabled = task.Status is not (QueueTaskStatus.Running or QueueTaskStatus.Cancelling);
         _taskOpenOutput!.Enabled = task.Status == QueueTaskStatus.Completed && !string.IsNullOrWhiteSpace(task.OutputPath);
-        bool canIgnoreDisk = CanIgnoreDiskSpaceCheck(task);
-        _taskIgnoreDisk!.Visible = canIgnoreDisk;
-        _taskIgnoreDisk.Enabled = canIgnoreDisk;
     }
 
     private void SetTaskProgressLabelAppearance(bool completed)

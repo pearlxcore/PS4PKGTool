@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.9.2
+
+- PKG merge now estimates build temp space from the original PKG size, so large merges no longer need worst-case free space.
+- The disk-space check can be skipped from Program Settings or the merge dialog.
+- Merge carries the update's required firmware, preserves empty directories, and fails clearly when a source file is missing.
+- GP4 generation keeps the app version and reports the exact directory when a path cannot be enumerated.
+
 ## v1.9.1
 
 - PKG merge now uses the configured temp and work folders instead of always using the Windows temp drive. Large merges no longer fail with a "not enough space" error on C:.

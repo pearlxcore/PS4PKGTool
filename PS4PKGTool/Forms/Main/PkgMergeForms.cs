@@ -27,6 +27,8 @@ namespace PS4PKGTool
             txtVersions.Text = $"Base: {basePkg.Version}    Update: {patchPkg.Version}";
             _outputPath.Text = "";
             _workParent.Text = DefaultWorkParent();
+            _ignoreDiskSpace.Checked =
+                PS4PKGTool.Utilities.Settings.SettingsManager.appSettings_?.IgnoreDiskSpaceCheck == true;
 
             _basePkgSize = GetFileSize(basePkg.Path);
             _patchPkgSize = GetFileSize(patchPkg.Path);
