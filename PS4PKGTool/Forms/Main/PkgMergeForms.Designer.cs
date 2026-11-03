@@ -301,7 +301,7 @@ namespace PS4PKGTool
             lblNote.Name = "lblNote";
             lblNote.Size = new System.Drawing.Size(712, 48);
             lblNote.TabIndex = 12;
-            lblNote.Text = "The source PKGs are not changed. A rebuilt Game PKG is created with the update version. The work location is used only as a parent for a temporary merge folder. For best results, set the work location and output to a local disk (C: or an internal SSD); network/Samba shares can cause filesystem errors during extraction and image building.";
+            lblNote.Text = "The source PKGs are not changed. A rebuilt Game PKG is created with the update version. The work location holds the temporary merge folder (extraction dumps and build scratch files). For best results, set the work location and output to a local disk (C: or an internal SSD); network/Samba shares can cause filesystem errors during extraction and image building.";
             lblNote.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // buttonsPanel

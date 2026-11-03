@@ -30,7 +30,7 @@ namespace PS4PKGTool.Forms.Main
             _txtVersion.Text = version;
 
             _outputPath.Text = "";
-            _workParent.Text = Path.GetTempPath();
+            _workParent.Text = PS4PKGTool.Utilities.PS4PKGToolHelper.Helper.ResolveTempRoot();
 
             _pkgSize = GetFileSize(pkgPath);
             UpdateSpaceWarning(this, EventArgs.Empty);
@@ -50,7 +50,7 @@ namespace PS4PKGTool.Forms.Main
             _lblSource.Text = "Sources";
             _lblOutput.Text = "Output folder";
             _outputPath.Text = Path.GetDirectoryName(pkgPaths[0]) ?? "";
-            _workParent.Text = Path.GetTempPath();
+            _workParent.Text = PS4PKGTool.Utilities.PS4PKGToolHelper.Helper.ResolveTempRoot();
             _pkgSize = pkgPaths.Sum(GetFileSize);
             UpdateSpaceWarning(this, EventArgs.Empty);
         }
